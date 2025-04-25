@@ -1,8 +1,2 @@
 # this is the 250425 topic
-# written in VSCODE
-
-base_view: dcm__dcm_linkedview2
-
-joins:
-  prisma__prisma_processed: {}
-  giant_spoon_299605_data_model_2025__utms2: {}
+{}

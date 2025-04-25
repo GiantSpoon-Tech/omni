@@ -1,0 +1,41 @@
+# Reference this view as giant_spoon_299605_data_model_2025__utms2
+catalog: giant-spoon-299605
+schema: data_model_2025
+table_name: utms2
+
+dimensions:
+  url: {}
+  placement_name: {}
+  placement_creative: {}
+  url_base: {}
+  url_utms: {}
+  urm_scrap: {}
+  url_scrap2: {}
+  scrap10: {}
+  utm_source: {}
+  utm_medium: {}
+  utm_campaign: {}
+  utm_content: {}
+  utm_term: {}
+
+  prisma_id:
+    format: ID
+
+  scrap1:
+    sql: Scrap1
+
+  scrap2:
+    sql: Scrap2
+
+  scrap3:
+    sql: Scrap3
+
+  scrap4:
+    sql: Scrap4
+
+  scrap5:
+    sql: Scrap5
+
+measures:
+  count:
+    aggregate_type: count

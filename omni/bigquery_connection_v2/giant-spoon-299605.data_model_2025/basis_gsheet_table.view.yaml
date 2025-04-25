@@ -1,0 +1,30 @@
+# Reference this view as giant_spoon_299605_data_model_2025__basis_gsheet_table
+catalog: giant-spoon-299605
+schema: data_model_2025
+table_name: basis_gsheet_table
+
+dimensions:
+  day: {}
+  campaign_name: {}
+  line_item_name: {}
+  basis_tactic: {}
+  placement: {}
+  creative_name: {}
+  creative_grouping_creative_grouping: {}
+  basis_dsp_tactic_group: {}
+  impressions: {}
+  clicks: {}
+  delivered_spend: {}
+  video_audio_plays: {}
+  video_views: {}
+  video_audio_fully_played: {}
+  viewable_impressions: {}
+  meta_data_date_range: {}
+  meta_data_date_pull: {}
+  gmail_dt: {}
+  latest_record: {}
+  n: {}
+
+measures:
+  count:
+    aggregate_type: count

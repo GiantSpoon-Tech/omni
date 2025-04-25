@@ -1,4 +1,5 @@
 base_view: dcm__dcm_linkedview2
+label: dcm-updatedinbranch2
 
 joins:
   prisma__prisma_processed: {}

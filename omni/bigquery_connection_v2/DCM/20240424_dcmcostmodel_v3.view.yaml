@@ -3,7 +3,8 @@ schema: DCM
 table_name: 20240424_dcmCostmodel_v3
 
 dimensions:
-  date: {}
+  date: {
+    type: DATE}
   campaign: {}
   package_roadblock: {}
   impressions: {}

@@ -4,3 +4,4 @@ label: dcm-updatedinbranch2
 joins:
   prisma__prisma_processed: {}
   giant_spoon_299605_data_model_2025__utms2: {}
+  dcm__20240424_dcmcostmodel_v3: {}

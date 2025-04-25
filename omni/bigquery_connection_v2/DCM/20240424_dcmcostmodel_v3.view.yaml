@@ -56,3 +56,19 @@ dimensions:
 measures:
   count:
     aggregate_type: count
+
+  daily_recalculated_cost_flag_list:
+    sql: ${dcm__20240424_dcmcostmodel_v3.daily_recalculated_cost_flag}
+    aggregate_type: list
+
+  daily_recalculated_cost_sum:
+    sql: ${dcm__20240424_dcmcostmodel_v3.daily_recalculated_cost}
+    aggregate_type: sum
+
+  impressions_sum:
+    sql: ${dcm__20240424_dcmcostmodel_v3.impressions}
+    aggregate_type: sum
+
+  impressions_sum_1:
+    sql: ${dcm__20240424_dcmcostmodel_v3.impressions}
+    aggregate_type: sum

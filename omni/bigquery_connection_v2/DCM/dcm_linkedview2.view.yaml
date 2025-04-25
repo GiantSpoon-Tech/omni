@@ -54,3 +54,7 @@ dimensions:
 measures:
   count:
     aggregate_type: count
+
+  impressions_sum:
+    sql: ${dcm__dcm_linkedview2.impressions}
+    aggregate_type: sum

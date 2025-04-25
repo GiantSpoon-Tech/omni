@@ -2,6 +2,8 @@
 schema: DCM
 table_name: dcm_linkedView2
 
+# this view extends the view in the base model
+# add something here and save!
 dimensions:
   date: {}
   campaign: {}

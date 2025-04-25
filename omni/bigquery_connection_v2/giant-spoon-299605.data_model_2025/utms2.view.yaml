@@ -20,6 +20,7 @@ dimensions:
 
   prisma_id:
     format: ID
+    primary_key: true
 
   scrap1:
     sql: Scrap1

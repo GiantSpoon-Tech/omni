@@ -1,0 +1,76 @@
+# Reference this view as prisma__prisma_processed_view
+schema: Prisma
+table_name: prisma_processed_view
+
+dimensions:
+  package_type: {}
+  placement_type: {}
+  placement_name: {}
+  start_date: {}
+  end_date: {}
+  cost_method: {}
+  buy_type: {}
+  buy_category: {}
+  click_through_url: {}
+  advertiser_name: {}
+  campaign_name: {}
+  supplier_code: {}
+  supplier_name: {}
+  planned_actions: {}
+  planned_cost_pk: {}
+  planned_clicks: {}
+  advertiser_short_name: {}
+  planned_imps_pk: {}
+  planned_units: {}
+  unit_type: {}
+  dimension: {}
+  media_name: {}
+  product_code: {}
+  product_name: {}
+  provider_name: {}
+  package_group_name: {}
+  out_of_home_end_date: {}
+  placement_cap_cost: {}
+  served_by: {}
+  payable_rate: {}
+  channel_if_buy_category: {}
+  placement_type_site: {}
+  device_type: {}
+  audience_type: {}
+  audience: {}
+  initative: {}
+  media_type: {}
+  line_item_name: {}
+  ad_size: {}
+  funnel: {}
+  kpi: {}
+  geo_market: {}
+  placement_number: {}
+  placement_comments: {}
+  days_in_out_of_home_end_date: {}
+  package_name: {}
+  placement_name2: {}
+  report_date: {}
+  script_run_date: {}
+  channel: {}
+  channel_raw: {}
+  channel_group: {}
+  campaign_friendly: {}
+  p_package_friendly: {}
+  n_of_placements: {}
+  total_days: {}
+  planned_daily_spend_pk: {}
+  planned_daily_impressions_pk: {}
+
+  package_id:
+    format: ID
+
+  external_entity_id:
+    format: ID
+
+  ad_server_placement_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

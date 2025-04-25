@@ -1,1 +1,6 @@
-[]
+- join_from_view: dcm__dcm_linkedview2
+  join_to_view: prisma__prisma_processed
+  join_type: always_left
+  on_sql: ${dcm__dcm_linkedview2.package_id} = ${prisma__prisma_processed.package_id}
+  relationship_type: many_to_one
+  reversible: false

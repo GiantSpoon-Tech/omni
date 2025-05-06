@@ -50,9 +50,9 @@ WITH cost_model AS (
           WHEN SUM(SUM(impressions)) OVER (PARTITION BY package_id) > SAFE_CAST(p_pkg_total_planned_imps AS NUMERIC)
             /* Adjusted CPM = planned_cost / delivered_imps  */
             THEN SAFE_DIVIDE(
-                   SAFE_CAST(p_pkg_total_planned_cost AS NUMERIC),
-                   SUM(SUM(impressions)) OVER (PARTITION BY package_id)
-                 ) * SUM(impressions)
+              SAFE_CAST(p_pkg_total_planned_cost AS NUMERIC),               -- Convert planned cost to a numeric value (just in case it's stored as a string)
+              SUM(SUM(impressions)) OVER (PARTITION BY package_id)          -- Total impressions delivered for the entire package (across all dates), using nested SUM to aggregate then window it
+            ) * SUM(impressions)                                            -- Multiply the per-impression cost by number of impressions delivered on this row's date
           /* Standard CPM = rate * imps / 1000 */
           ELSE SAFE_CAST(rate_raw AS NUMERIC) * SUM(impressions) / 1000
         END

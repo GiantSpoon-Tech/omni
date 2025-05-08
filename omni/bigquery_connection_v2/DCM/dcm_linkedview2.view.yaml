@@ -1,0 +1,60 @@
+# Reference this view as dcm__dcm_linkedview2
+schema: DCM
+table_name: dcm_linkedView2
+
+# this view extends the view in the base model
+# add something here and save!
+dimensions:
+  date: {}
+  campaign: {}
+  package_roadblock: {}
+  impressions: {}
+  ad: {}
+  click_rate: {}
+  clicks: {}
+  creative: {}
+  media_cost: {}
+  rich_media_video_completions: {}
+  rich_media_video_plays: {}
+  total_conversions: {}
+  n_of_placements: {}
+  pkg_daily_imps: {}
+  pkg_total_imps: {}
+  pkg_daily_imps_perc: {}
+  pkg_total_imps_perc: {}
+  days_live: {}
+  prorated_planned_cost_pk: {}
+  prorated_planned_imps_pk: {}
+  p_cost_method: {}
+  p_package_friendly: {}
+  p_start_date: {}
+  p_end_date: {}
+  p_total_days: {}
+  p_pkg_daily_planned_cost: {}
+  p_pkg_total_planned_cost: {}
+  p_pkg_daily_planned_imps: {}
+  p_pkg_total_planned_imps: {}
+  p_channel_group: {}
+  p_advertiser_name: {}
+  cpm_overdelivery_flag: {}
+  rate_raw: {}
+  flight_date_flag: {}
+  daily_cpm: {}
+  test: {}
+
+  package_id:
+    format: ID
+
+  placement_id:
+    format: ID
+
+  key:
+    sql: KEY
+
+measures:
+  count:
+    aggregate_type: count
+
+  impressions_sum:
+    sql: ${dcm__dcm_linkedview2.impressions}
+    aggregate_type: sum

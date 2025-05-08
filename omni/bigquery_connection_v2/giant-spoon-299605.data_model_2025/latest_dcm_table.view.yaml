@@ -1,0 +1,11 @@
+# Reference this view as giant_spoon_299605_data_model_2025__latest_dcm_table
+catalog: giant-spoon-299605
+schema: data_model_2025
+table_name: latest_dcm_table
+
+dimensions:
+  table_name: {}
+
+measures:
+  count:
+    aggregate_type: count

@@ -1,0 +1,31 @@
+# Reference this view as giant_spoon_299605_data_model_2025__basis_master2
+catalog: giant-spoon-299605
+schema: data_model_2025
+table_name: basis_master2
+
+dimensions:
+  date: {}
+  campaign: {}
+  package_roadblock: {}
+  tactic: {}
+  placement: {}
+  creative_name: {}
+  creative_grouping: {}
+  basis_dsp_tactic_group: {}
+  impressions: {}
+  clicks: {}
+  media_cost: {}
+  video_audio_plays: {}
+  video_views: {}
+  video_audio_fully_played: {}
+  viewable_impressions: {}
+  meta_data_date_range: {}
+  meta_data_date_pull: {}
+  gmail_dt: {}
+  latest_record: {}
+  n: {}
+  key: {}
+
+measures:
+  count:
+    aggregate_type: count

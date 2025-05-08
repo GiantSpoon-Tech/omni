@@ -1,0 +1,34 @@
+# Reference this view as giant_spoon_299605_data_model_2025__new_md
+catalog: giant-spoon-299605
+schema: data_model_2025
+table_name: new_md
+
+dimensions:
+  package_roadblock: {}
+  advertiser: {}
+  campaign: {}
+  site: {}
+  placement: {}
+  ad: {}
+  creative: {}
+  date: {}
+  impressions: {}
+  clicks: {}
+  click_rate: {}
+  total_conversions: {}
+  media_cost: {}
+  rich_media_video_plays: {}
+  rich_media_video_completions: {}
+
+  package_id:
+    format: ID
+
+  placement_id:
+    format: ID
+
+  key:
+    sql: KEY
+
+measures:
+  count:
+    aggregate_type: count

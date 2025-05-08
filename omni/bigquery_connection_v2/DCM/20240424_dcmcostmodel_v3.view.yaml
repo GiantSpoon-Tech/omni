@@ -1,0 +1,74 @@
+# Reference this view as dcm__20240424_dcmcostmodel_v3
+schema: DCM
+table_name: 20240424_dcmCostmodel_v3
+
+dimensions:
+  date: {}
+  campaign: {}
+  package_roadblock: {}
+  impressions: {}
+  ad: {}
+  click_rate: {}
+  clicks: {}
+  creative: {}
+  media_cost: {}
+  rich_media_video_completions: {}
+  rich_media_video_plays: {}
+  total_conversions: {}
+  n_of_placements: {}
+  pkg_daily_imps: {}
+  pkg_total_imps: {}
+  pkg_daily_imps_perc: {}
+  pkg_total_imps_perc: {}
+  days_live: {}
+  prorated_planned_cost_pk: {}
+  prorated_planned_imps_pk: {}
+  p_cost_method: {}
+  p_package_friendly: {}
+  p_start_date: {}
+  p_end_date: {}
+  p_total_days: {}
+  p_pkg_daily_planned_cost: {}
+  p_pkg_total_planned_cost: {}
+  p_pkg_daily_planned_imps: {}
+  p_pkg_total_planned_imps: {}
+  p_channel_group: {}
+  p_advertiser_name: {}
+  cpm_overdelivery_flag: {}
+  rate_raw: {}
+  flight_date_flag: {}
+  daily_cpm: {}
+  test: {}
+  pkg_total_delivered_imps: {}
+  daily_recalculated_cost: {}
+  daily_recalculated_cost_flag: {}
+  flight_date_flag2: {}
+
+  package_id:
+    format: ID
+
+  placement_id:
+    format: ID
+
+  key:
+    sql: KEY
+
+measures:
+  count:
+    aggregate_type: count
+
+  daily_recalculated_cost_flag_list:
+    sql: ${dcm__20240424_dcmcostmodel_v3.daily_recalculated_cost_flag}
+    aggregate_type: list
+
+  daily_recalculated_cost_sum:
+    sql: ${dcm__20240424_dcmcostmodel_v3.daily_recalculated_cost}
+    aggregate_type: sum
+
+  impressions_sum:
+    sql: ${dcm__20240424_dcmcostmodel_v3.impressions}
+    aggregate_type: sum
+
+  impressions_sum_1:
+    sql: ${dcm__20240424_dcmcostmodel_v3.impressions}
+    aggregate_type: sum

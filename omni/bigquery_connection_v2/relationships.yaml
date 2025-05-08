@@ -1,0 +1,22 @@
+- join_from_view: dcm__dcm_linkedview2
+  join_to_view: dcm__20240424_dcmcostmodel_v3
+  join_type: always_left
+  on_sql: ${dcm__dcm_linkedview2.date[date]} =
+    ${dcm__20240424_dcmcostmodel_v3.date[date]} AND
+    ${dcm__dcm_linkedview2.placement_id} =
+    ${dcm__20240424_dcmcostmodel_v3.placement_id}
+  relationship_type: one_to_one
+
+- join_from_view: dcm__dcm_linkedview2
+  join_to_view: giant_spoon_299605_data_model_2025__utms2
+  join_type: always_left
+  on_sql: ${dcm__dcm_linkedview2.placement_id} =
+    ${giant_spoon_299605_data_model_2025__utms2.prisma_id}
+  relationship_type: many_to_many
+
+- join_from_view: dcm__dcm_linkedview2
+  join_to_view: prisma__prisma_processed
+  join_type: always_left
+  on_sql: ${dcm__dcm_linkedview2.package_id} = ${prisma__prisma_processed.package_id}
+  relationship_type: many_to_one
+  reversible: false

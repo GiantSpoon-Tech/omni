@@ -1,0 +1,50 @@
+# Reference this view as giant_spoon_299605_data_model_2025__offlinedata_gsheet
+catalog: giant-spoon-299605
+schema: data_model_2025
+table_name: OfflineData_gsheet
+
+dimensions:
+  data_type: {}
+  join_key: {}
+  int64_field_14: {}
+
+  date:
+    sql: Date
+    description: "%m/%d/%E4Y"
+
+  channel:
+    sql: Channel
+
+  business_unit:
+    sql: Business_Unit
+
+  campaign:
+    sql: Campaign
+
+  partner:
+    sql: Partner
+
+  placement:
+    sql: PLACEMENT
+
+  spend:
+    sql: Spend
+
+  impressions:
+    sql: Impressions
+
+  cpm:
+    sql: CPM
+
+  month:
+    sql: Month
+
+  _:
+    hidden: true
+
+  year:
+    sql: Year
+
+measures:
+  count:
+    aggregate_type: count

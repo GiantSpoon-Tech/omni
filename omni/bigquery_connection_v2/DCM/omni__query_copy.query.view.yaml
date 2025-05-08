@@ -1,0 +1,36 @@
+# Reference this view as omni__query_copy
+label: ⚡️🍣 Query Copy
+
+schema: DCM
+query:
+  fields:
+    dcm__dcm_linkedview2.p_cost_method: p_cost_method
+    dcm__dcm_linkedview2.date[date]: date_date
+    dcm__dcm_linkedview2.p_advertiser_name: p_advertiser_name
+    dcm__20240424_dcmcostmodel_v3.package_id: dcm__20240424_dcmcostmodel_v3_package_id
+    dcm__dcm_linkedview2.package_id: dcm__dcm_linkedview2_package_id
+    dcm__dcm_linkedview2.placement_id: placement_id
+    dcm__dcm_linkedview2.impressions_sum: impressions_sum
+    dcm__20240424_dcmcostmodel_v3.impressions_sum_1: impressions_sum_1
+  base_view: dcm__dcm_linkedview2
+  filters:
+    dcm__dcm_linkedview2.date:
+      is: 2025-04-01
+    dcm__dcm_linkedview2.placement_id:
+      is: []
+  sorts:
+    - field: dcm__dcm_linkedview2.placement_id
+
+dimensions:
+  p_cost_method: {}
+  date_date: {}
+  p_advertiser_name: {}
+  dcm__20240424_dcmcostmodel_v3_package_id: {}
+  dcm__dcm_linkedview2_package_id: {}
+  placement_id: {}
+  impressions_sum: {}
+  impressions_sum_1: {}
+
+measures:
+  count:
+    aggregate_type: count

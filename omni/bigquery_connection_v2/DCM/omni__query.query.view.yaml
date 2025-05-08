@@ -1,0 +1,22 @@
+# Reference this view as omni__query
+label: ⚡️🍣 Query
+
+schema: DCM
+query:
+  fields:
+    dcm__dcm_linkedview2.p_package_friendly: p_package_friendly
+    prisma__prisma_processed.campaign_name: campaign_name
+    dcm__dcm_linkedview2.impressions: impressions
+  base_view: dcm__dcm_linkedview2
+  sorts:
+    - field: dcm__dcm_linkedview2.impressions
+      desc: true
+
+dimensions:
+  p_package_friendly: {}
+  campaign_name: {}
+  impressions: {}
+
+measures:
+  count:
+    aggregate_type: count

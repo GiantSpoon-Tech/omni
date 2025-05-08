@@ -1,0 +1,25 @@
+# Reference this view as giant_spoon_299605_data_model_2025__dcm_test2
+catalog: giant-spoon-299605
+schema: data_model_2025
+table_name: dcm_test2
+
+dimensions:
+  advertiser: {}
+  campaign: {}
+  site: {}
+  placement: {}
+  ad: {}
+  creative: {}
+  package_roadblock: {}
+  impressions: {}
+  clicks: {}
+  click_rate: {}
+  total_conversions: {}
+  media_cost: {}
+  rich_media_video_plays: {}
+  rich_media_video_completions: {}
+  date: {}
+
+measures:
+  count:
+    aggregate_type: count

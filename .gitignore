@@ -1,0 +1,52 @@
+#-------------------------------------
+# VS Code Settings (editor-specific)
+#-------------------------------------
+.vscode/
+.history/
+*.code-workspace
+
+#-------------------------------------
+# OS-specific junk
+#-------------------------------------
+.DS_Store              # macOS
+Thumbs.db              # Windows
+ehthumbs.db
+Icon?
+
+#-------------------------------------
+# Node / JS Projects (if any tooling is JS-based)
+#-------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+#-------------------------------------
+# Python or Notebook Artifacts (in case you use them)
+#-------------------------------------
+__pycache__/
+*.py[cod]
+*.ipynb_checkpoints
+
+#-------------------------------------
+# BigQuery / SQL Workflow
+#-------------------------------------
+# (you may want to keep .sql files, but avoid temp/log/output files)
+*.bak
+*.tmp
+*.log
+
+#-------------------------------------
+# Git-specific
+#-------------------------------------
+*.swp
+*.swo
+*~
+*.orig
+
+#-------------------------------------
+# Ignore local test data/output
+#-------------------------------------
+data/
+output/
+tmp/

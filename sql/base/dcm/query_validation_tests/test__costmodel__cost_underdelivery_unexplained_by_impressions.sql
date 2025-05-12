@@ -67,7 +67,7 @@ with a as(
     round(ABS(round(SUM(daily_recalculated_cost)) - MAX(p_pkg_total_planned_cost)),2) AS cost_diff
   --FROM looker-studio-pro-452620.DCM.20250505_costModel_v5
   FROM looker-studio-pro-452620.repo_tables.cost_model
-  where flight_status_flag = ''
+  where flight_status_flag = 'ended'
    --AND placement_id ='P2T86SL'
   GROUP BY 1,2,3
   HAVING cost_diff_pct > 1

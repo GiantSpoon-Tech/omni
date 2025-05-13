@@ -28,9 +28,7 @@ SELECT
   `p_package_friendly`,
   `p_pkg_daily_planned_cost`,
   `p_total_days`,
-  `prsm_payable_rate`,
   `p_pkg_total_planned_imps`,
-  `prsm_placement_name`,
   `total_inflight_impressions`,
   `p_cost_method`,
   `package_id`,
@@ -107,9 +105,9 @@ SELECT
   NULL AS `p_package_friendly`,
   NULL AS `p_pkg_daily_planned_cost`,
   NULL AS `p_total_days`,
-  NULL AS `prsm_payable_rate`,
+
   NULL AS `p_pkg_total_planned_imps`,
-  NULL AS `prsm_placement_name`,
+
   NULL AS `total_inflight_impressions`,
   NULL AS `p_cost_method`,
   NULL AS `package_id`,

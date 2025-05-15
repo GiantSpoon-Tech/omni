@@ -5,12 +5,12 @@ library(glue)
 library(stringr)
 
 bq_project  <- "giant-spoon-299605"
-bq_dataset  <- "tiktok_ads"
+bq_dataset  <- "tiktok_ads_tiktok_ads"
 
 tables_filter <- c(  # only these tables
-                      "campaign_history" 
-                      , "ad_history"
-                      , 
+                    #   "campaign_history" 
+                    #   , "ad_history"
+                    #   , 
                       )  # nolint
 
 connectToBigQuery <- function(project_id = bq_project) {
@@ -131,16 +131,16 @@ generate_union_all <- function(project, dataset, table_like = "%", target = NULL
   return(sql)
 }
 
-# Example usage - Union ALL tables
-qry <- generate_union_all(
-  project  = "giant-spoon-299605",
-  dataset  = "tiktok_ads",
-  table_like = "%",                                   # all tables
-  target = "giant-spoon-299605.data_model_2025.tiktok_unionall"  # optional
-)
-cat(qry)   # inspect or bq_project_query() it
+# # Example usage 1 - Union ALL tables
+# qry <- generate_union_all(
+#   project  = "giant-spoon-299605",
+#   dataset  = "tiktok_ads_tiktok_ads",
+#   table_like = "%",                                   # all tables
+#   target = "giant-spoon-299605.data_model_2025.tiktok_unionall"  # optional
+# )
+# cat(qry)   # inspect or bq_project_query() it
 
-# Example usage - Union specific tables
+# Example usage 2 - Union specific tables
 qry_selected <- generate_union_all(
   project  = bq_project,
   dataset  = bq_dataset,
@@ -150,5 +150,6 @@ qry_selected <- generate_union_all(
 cat(qry_selected)   # inspect or bq_project_query() it
 
 # Run the query
-a <- bq_project_query("giant-spoon-299605", qry)
+#a <- tbl(bq_project_query("giant-spoon-299605", qry))
+# as_bq_dataset(a)
 # nolint end

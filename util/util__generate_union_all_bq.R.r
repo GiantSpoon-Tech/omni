@@ -1,17 +1,47 @@
 # nolint start
+# =============================================================================
+# @file: util__generate_union_all_bq.R
+# @layer: utilities
+# @description: 
+#   Dynamically generates and optionally runs a UNION ALL query in BigQuery 
+#   across multiple tables in a dataset. Ensures consistent schema by aligning
+#   columns, casting to consistent types, and inserting NULLs where necessary.
+#   Optionally writes the result to a target table.
+#
+#   Handles:
+#     - Auto-discovery of columns via INFORMATION_SCHEMA
+#     - Alignment of schemas with data type safety
+#     - Optional table filtering (via pattern or whitelist)
+#     - Adds a source_table column for lineage
+#
+# @inputs:
+#   - project: BigQuery project ID
+#   - dataset: Dataset name
+#   - table_like: SQL LIKE pattern for matching tables (optional)
+#   - selected_tables: Vector of table names to include (optional)
+#   - target: Full table path to write the unioned output (optional)
+#
+# @usage:
+#   - Use `generate_union_all()` to build SQL string
+#   - Use `bq_project_query()` to run it if needed
+#
+# @dependencies:
+#   - R packages: bigrquery, dplyr, glue, stringr
+#
+# @author:
+#   Auto-generated for use in multi-source ad data unification (e.g. TikTok)
+# =============================================================================
 library(bigrquery)
 library(dplyr)
 library(glue)
 library(stringr)
 
 bq_project  <- "giant-spoon-299605"
-bq_dataset  <- "tiktok_ads"
+bq_dataset  <- "tiktok_ads_tiktok_ads"
 
-tables_filter <- c(  # only these tables
-                      "campaign_history" 
-                      , "ad_history"
-                      , 
-                      )  # nolint
+# tables_filter <- c(  # only these tables
+                   
+#                       )  # nolint
 
 connectToBigQuery <- function(project_id = bq_project) {
   # Attempt to connect to the BigQuery project

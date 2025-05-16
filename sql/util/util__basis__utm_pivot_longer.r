@@ -41,3 +41,4 @@ creative_long <- df %>%
     values_drop_na = TRUE
   ) %>%
   mutate(creative_num = as.integer(creative_num))
+# 

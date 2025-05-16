@@ -5,7 +5,7 @@
 --               campaign planning, actualized delivery, and cost model metrics.
 -- @source: final_views.dcm
 -- @source: final_views.utms_view
--- @source: final_views.prisma_view
+
 -- @target: repo_tables.dcm
 create or replace table `looker-studio-pro-452620.repo_tables.dcm` as
 
@@ -66,7 +66,7 @@ SELECT
   utm._UTM_Medium as utm_medium,
   utm._UTM_Content as utm_content,
   utm._UTM_Term as utm_term,
-  prsma.placement_name as p_placement_name
+  --prsma.placement_name as p_placement_name
 
 
 FROM
@@ -74,4 +74,4 @@ FROM
 left join looker-studio-pro-452620.final_views.utms_view as utm
 -- on concat(dcm.placement_id, " || ", dcm.creative) = utm.placement_creative
 on concat(dcm.ad) = utm.ad_name
-left join giant-spoon-299605.Prisma_Master.prisma2024 as prsma ON dcm.placement_id = prsma.placement_number
+--left join giant-spoon-299605.Prisma_Master.prisma2024 as prsma ON dcm.placement_id = prsma.placement_number

@@ -15,7 +15,7 @@ USING (
             PARTITION BY
               day, campaign_name, line_item_name, basis_tactic, placement,
               creative_name, creative_grouping_creative_grouping, basis_dsp_tactic_group
-            --ORDER BY day DESC  -- Or another reliable tiebreaker
+            ORDER BY gmail_dt DESC  -- Or another reliable tiebreaker
           ) AS row_num
     FROM `giant-spoon-299605.data_model_2025.basis_gsheet2`
     WHERE latest_record = 1

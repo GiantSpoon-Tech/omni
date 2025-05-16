@@ -8,22 +8,26 @@
 -- @target: looker-studio-pro-452620.repo_tables.basis
 
 create or replace table `looker-studio-pro-452620.repo_tables.basis` as
+
 WITH
   a AS (
   SELECT
     *,
-    IFNULL(REGEXP_EXTRACT(placement, r'CP_(\d+)'),CONCAT(placement," - ", creative_name)) AS a_id,
+    IFNULL(
+      concat(REGEXP_EXTRACT(placement, r'CP_(\d+)')," || ",creative_name),
+      CONCAT(placement," || ", creative_name)) AS a_id,
   FROM
     giant-spoon-299605.data_model_2025.basis_master2 )
+
 SELECT
   *,
+  COUNT(DISTINCT utm_content) OVER (PARTITION BY placement) AS utm_content_count
 FROM
   a
 LEFT JOIN
-  `looker-studio-pro-452620.20250327_data_model.basis_utms_stg` b
+  `looker-studio-pro-452620.final_views.basis_utms_stg` b
 ON
   a.a_id = b.id
 ORDER BY
   utm_medium DESC
 NULLS LAST
- 

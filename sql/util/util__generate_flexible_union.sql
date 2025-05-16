@@ -13,11 +13,11 @@
 BEGIN
 
 -- Step 1: Declare table inputs
-DECLARE dataset_a STRING DEFAULT 'looker-studio-pro-452620.repo_tables';
-DECLARE table_a STRING DEFAULT 'dcm';
+DECLARE dataset_a STRING DEFAULT 'giant-spoon-299605.tiktok_ads_tiktok_ads' ;
+DECLARE table_a STRING DEFAULT 'tiktok_ads__ad_group_report';
 
-DECLARE dataset_b STRING DEFAULT 'looker-studio-pro-452620.repo_tables';
-DECLARE table_b STRING DEFAULT 'basis';
+DECLARE dataset_b STRING DEFAULT 'giant-spoon-299605.tiktok_ads_tiktok_ads';
+DECLARE table_b STRING DEFAULT 'tiktok_ads__ad_report';
 
 -- Step 2: Declare result variables
 DECLARE select_a STRING;
@@ -74,6 +74,9 @@ SET select_a = (
   FROM column_comparison
 );
 
+-- Add source table column to first table
+SET select_a = CONCAT(select_a, ", '", table_a, "' AS source_table");
+
 SET select_b = (
   SELECT STRING_AGG(
     CASE
@@ -83,6 +86,9 @@ SET select_b = (
   )
   FROM column_comparison
 );
+
+-- Add source table column to second table
+SET select_b = CONCAT(select_b, ", '", table_b, "' AS source_table");
 
 -- Step 6: Create full UNION SQL
 SET full_union_sql = FORMAT("""

@@ -3,11 +3,11 @@
 -- @description: Parses UTM parameters from raw Basis URL strings into structured columns.
 --               Extracts utm_source, utm_medium, utm_campaign, utm_term, utm_content,
 --               and a unique ID for downstream joining with delivery logs.
--- @source: looker-studio-pro-452620.20250327_data_model.basis_utms_raw_25Q1
+-- @source: looker-studio-pro-452620.20250327_data_model.basis_utms_pivoted
 -- @target: basis_utms_stg (used as a staging table for joins with Basis delivery data)
 -- extract utms from url into seperate columns
 
-create or replace view `looker-studio-pro-452620.20250327_data_model.basis_utms_stg` as
+create or replace view `looker-studio-pro-452620.20250327_data_model.basis_utms_pivoted` as
 
 SELECT
   url,

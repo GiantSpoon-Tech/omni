@@ -6,8 +6,8 @@
 -- @source: final_views.dcm
 -- @source: final_views.utms_view
 
--- @target: repo_tables.dcm
-create or replace table `looker-studio-pro-452620.repo_tables.dcm` as
+-- @target: repo_stg.dcm_plus_utms
+create or replace view `looker-studio-pro-452620.repo_stg.dcm_plus_utms` as
 
 SELECT
   dcm.date,

@@ -1,0 +1,116 @@
+nodes:
+- id: generated-source-node
+  source:
+    table: {project: looker-studio-pro-452620, dataset: final_views, table: dcm}
+  generated:
+    sections:
+    - {type: SECTION_SOURCE_TABLE, label: Read from BigQuery table looker-studio-pro-452620.final_views.dcm}
+    outputSchema:
+      field:
+      - {name: date, type: DATE, mode: NULLABLE}
+      - {name: campaign, type: STRING, mode: NULLABLE}
+      - {name: package_roadblock, type: STRING, mode: NULLABLE}
+      - {name: package_id, type: STRING, mode: NULLABLE}
+      - {name: placement_id, type: STRING, mode: NULLABLE}
+      - {name: impressions, type: INT64, mode: NULLABLE}
+      - {name: key, type: STRING, mode: NULLABLE}
+      - {name: ad, type: STRING, mode: NULLABLE}
+      - {name: click_rate, type: FLOAT64, mode: NULLABLE}
+      - {name: clicks, type: INT64, mode: NULLABLE}
+      - {name: creative, type: STRING, mode: NULLABLE}
+      - {name: media_cost, type: FLOAT64, mode: NULLABLE}
+      - {name: rich_media_video_completions, type: INT64, mode: NULLABLE}
+      - {name: rich_media_video_plays, type: INT64, mode: NULLABLE}
+      - {name: total_conversions, type: FLOAT64, mode: NULLABLE}
+      - {name: p_cost_method, type: STRING, mode: NULLABLE}
+      - {name: p_package_friendly, type: STRING, mode: NULLABLE}
+      - {name: p_start_date, type: DATE, mode: NULLABLE}
+      - {name: p_end_date, type: DATE, mode: NULLABLE}
+      - {name: p_total_days, type: INT64, mode: NULLABLE}
+      - {name: p_pkg_daily_planned_cost, type: FLOAT64, mode: NULLABLE}
+      - {name: p_pkg_total_planned_cost, type: FLOAT64, mode: NULLABLE}
+      - {name: p_pkg_daily_planned_imps, type: FLOAT64, mode: NULLABLE}
+      - {name: p_pkg_total_planned_imps, type: INT64, mode: NULLABLE}
+      - {name: p_channel_group, type: STRING, mode: NULLABLE}
+      - {name: p_advertiser_name, type: STRING, mode: NULLABLE}
+      - {name: flight_date_flag, type: INT64, mode: NULLABLE}
+      - {name: flight_status_flag, type: STRING, mode: NULLABLE}
+      - {name: rate_raw, type: STRING, mode: NULLABLE}
+      - {name: n_of_placements, type: INT64, mode: NULLABLE}
+      - {name: d_min_date, type: DATE, mode: NULLABLE}
+      - {name: d_max_date, type: DATE, mode: NULLABLE}
+      - {name: min_flight_date, type: DATE, mode: NULLABLE}
+      - {name: max_flight_date, type: DATE, mode: NULLABLE}
+      - {name: pkg_total_imps, type: INT64, mode: NULLABLE}
+      - {name: total_inflight_impressions, type: INT64, mode: NULLABLE}
+      - {name: pkg_daily_imps, type: INT64, mode: NULLABLE}
+      - {name: pkg_daily_imps_perc, type: FLOAT64, mode: NULLABLE}
+      - {name: pkg_total_imps_perc, type: FLOAT64, mode: NULLABLE}
+      - {name: pkg_inflight_imps_perc, type: FLOAT64, mode: NULLABLE}
+      - {name: days_live, type: INT64, mode: NULLABLE}
+      - {name: prorated_planned_cost_pk, type: FLOAT64, mode: NULLABLE}
+      - {name: prorated_planned_imps_pk, type: FLOAT64, mode: NULLABLE}
+      - {name: cpm_overdelivery_flag, type: INT64, mode: NULLABLE}
+      - {name: daily_cpm, type: FLOAT64, mode: NULLABLE}
+      - {name: daily_recalculated_cost, type: FLOAT64, mode: NULLABLE}
+      - {name: daily_recalculated_cost_flag, type: STRING, mode: NULLABLE}
+      - {name: daily_recalculated_imps, type: INT64, mode: NULLABLE}
+    sourceGenerated:
+      sourceSchema:
+        tableSchema:
+          field:
+          - {name: date, type: DATE, mode: NULLABLE}
+          - {name: campaign, type: STRING, mode: NULLABLE}
+          - {name: package_roadblock, type: STRING, mode: NULLABLE}
+          - {name: package_id, type: STRING, mode: NULLABLE}
+          - {name: placement_id, type: STRING, mode: NULLABLE}
+          - {name: impressions, type: INTEGER, mode: NULLABLE}
+          - {name: KEY, type: STRING, mode: NULLABLE}
+          - {name: ad, type: STRING, mode: NULLABLE}
+          - {name: click_rate, type: FLOAT, mode: NULLABLE}
+          - {name: clicks, type: INTEGER, mode: NULLABLE}
+          - {name: creative, type: STRING, mode: NULLABLE}
+          - {name: media_cost, type: FLOAT, mode: NULLABLE}
+          - {name: rich_media_video_completions, type: INTEGER, mode: NULLABLE}
+          - {name: rich_media_video_plays, type: INTEGER, mode: NULLABLE}
+          - {name: total_conversions, type: FLOAT, mode: NULLABLE}
+          - {name: p_cost_method, type: STRING, mode: NULLABLE}
+          - {name: p_package_friendly, type: STRING, mode: NULLABLE}
+          - {name: p_start_date, type: DATE, mode: NULLABLE}
+          - {name: p_end_date, type: DATE, mode: NULLABLE}
+          - {name: p_total_days, type: INTEGER, mode: NULLABLE}
+          - {name: p_pkg_daily_planned_cost, type: FLOAT, mode: NULLABLE}
+          - {name: p_pkg_total_planned_cost, type: FLOAT, mode: NULLABLE}
+          - {name: p_pkg_daily_planned_imps, type: FLOAT, mode: NULLABLE}
+          - {name: p_pkg_total_planned_imps, type: INTEGER, mode: NULLABLE}
+          - {name: p_channel_group, type: STRING, mode: NULLABLE}
+          - {name: p_advertiser_name, type: STRING, mode: NULLABLE}
+          - {name: flight_date_flag, type: INTEGER, mode: NULLABLE}
+          - {name: flight_status_flag, type: STRING, mode: NULLABLE}
+          - {name: rate_raw, type: STRING, mode: NULLABLE}
+          - {name: n_of_placements, type: INTEGER, mode: NULLABLE}
+          - {name: d_min_date, type: DATE, mode: NULLABLE}
+          - {name: d_max_date, type: DATE, mode: NULLABLE}
+          - {name: min_flight_date, type: DATE, mode: NULLABLE}
+          - {name: max_flight_date, type: DATE, mode: NULLABLE}
+          - {name: pkg_total_imps, type: INTEGER, mode: NULLABLE}
+          - {name: total_inflight_impressions, type: INTEGER, mode: NULLABLE}
+          - {name: pkg_daily_imps, type: INTEGER, mode: NULLABLE}
+          - {name: pkg_daily_imps_perc, type: FLOAT, mode: NULLABLE}
+          - {name: pkg_total_imps_perc, type: FLOAT, mode: NULLABLE}
+          - {name: pkg_inflight_imps_perc, type: FLOAT, mode: NULLABLE}
+          - {name: days_live, type: INTEGER, mode: NULLABLE}
+          - {name: prorated_planned_cost_pk, type: FLOAT, mode: NULLABLE}
+          - {name: prorated_planned_imps_pk, type: FLOAT, mode: NULLABLE}
+          - {name: cpm_overdelivery_flag, type: INTEGER, mode: NULLABLE}
+          - {name: daily_cpm, type: FLOAT, mode: NULLABLE}
+          - {name: daily_recalculated_cost, type: FLOAT, mode: NULLABLE}
+          - {name: daily_recalculated_cost_flag, type: STRING, mode: NULLABLE}
+          - {name: daily_recalculated_imps, type: INTEGER, mode: NULLABLE}
+generated:
+  validationErrors:
+  - {level: LEVEL_ERROR, description: Data preparation must have 1 destination table.
+      Please add a destination table to continue scheduling}
+  location: US
+  description: |
+    Select all columns from the 'dcm' table within the specified Looker Studio dataset.

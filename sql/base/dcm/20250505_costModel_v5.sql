@@ -1,8 +1,8 @@
 
 
---CREATE OR REPLACE TABLE DCM.cost_model_temp AS
+CREATE OR REPLACE TABLE repo_tables.cost_model AS
 
---------------- version current ------------
+--------------- version current UPDATED 05/13/25 ------------
 
 WITH
 
@@ -23,6 +23,7 @@ base_delivery_metadata AS (
     a.package_id,
     a.placement_id,
     a.impressions,
+    a.placement,
     a.`KEY`,
     a.`ad`,
     a.`click_rate`,
@@ -74,7 +75,9 @@ base_delivery_metadata AS (
   FROM `giant-spoon-299605.data_model_2025.new_md` a
   LEFT JOIN `looker-studio-pro-452620.20250327_data_model.prisma_porcessed` b
     ON a.package_id = b.package_id
-  WHERE a.impressions > 0
+
+  WHERE a.impressions > 0 
+  
 ),
 
 -- 2. [ dr. ] delivery rollup |  PRECOMPUTED PACKAGE-LEVEL METRICS

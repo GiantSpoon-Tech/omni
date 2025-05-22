@@ -140,9 +140,9 @@ create_column_presence_matrix <- function(columns_df) {
 #' @return A dataframe with common columns and their data types
 #'
 find_common_columns <- function(columns_df) {
-  # Count unique tables
-  table_count <- length(unique(columns_df$table_name))
-  
+  # Count unique tables in the input
+  n_tables <- length(unique(columns_df$table_name))
+
   # Find columns that appear in all tables
   common_cols <- columns_df %>%
     group_by(column_name) %>%
@@ -151,10 +151,10 @@ find_common_columns <- function(columns_df) {
       data_types = paste(sort(unique(data_type)), collapse = ", "),
       .groups = "drop"
     ) %>%
-    filter(table_count == table_count) %>%
-    select(column_name, data_types, table_name) %>%
+    filter(table_count == n_tables) %>%
+    select(column_name, data_types) %>%
     arrange(column_name)
-  
+
   return(common_cols)
 }
 

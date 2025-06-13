@@ -158,34 +158,137 @@ find_common_columns <- function(columns_df) {
   return(common_cols)
 }
 
-# Example usage
-# Get all columns from all tables in the dataset
-all_columns <- get_dataset_columns(
-  project = bq_project,
-  dataset = bq_dataset
+#! Example usage !!!!
+# Get all columns from all tables in the dataset --
+# UNCOMMENT BELOW
+  # all_columns <- get_dataset_columns(
+  #   project = bq_project,
+  #   dataset = bq_dataset
+  # )
+
+  # # Print the first few rows
+  # head(all_columns)
+
+  # # Get a summary of column usage
+  # column_summary <- summarize_column_usage(all_columns)
+  # head(column_summary)
+
+  # # Create a presence matrix
+  # presence_matrix <- create_column_presence_matrix(all_columns)
+  # head(presence_matrix[, 1:10])  # Show first 10 columns only
+
+  # # Find common columns
+  # common_columns <- find_common_columns(all_columns)
+  # print(common_columns)
+
+  # # Example with specific tables
+  # selected_columns <- get_dataset_columns(
+  #   project = bq_project,
+  #   dataset = bq_dataset,
+  #   selected_tables = c("adgroup_history", "campaign_history")
+  # )
+
+  # # Print the first few rows of the selected tables
+  # head(selected_columns)
+
+#' Get a dataframe of all columns in a single table
+#'
+#' @param project BigQuery project ID
+#' @param dataset BigQuery dataset name
+#' @param table Table name
+#' @return A dataframe with columns: table_name, column_name, data_type, ordinal_position, project, dataset
+#'
+get_table_columns <- function(project, dataset, table) {
+  # Get connection to use for SQL quoting
+  con <- connectToBigQuery(project)
+  
+  # Build query for a single table
+  query <- glue("
+    SELECT 
+      '{project}' as project,
+      '{dataset}' as dataset,
+      table_name, 
+      column_name, 
+      data_type,
+      ordinal_position
+    FROM `{project}.{dataset}.INFORMATION_SCHEMA.COLUMNS`
+    WHERE table_name = ")
+  
+  # Add the properly quoted table parameter
+  query <- paste0(query, dbQuoteLiteral(con, table))
+  
+  # Add ordering to make the results more useful
+  query <- paste0(query, " ORDER BY ordinal_position")
+  
+  # Execute query and download results
+  columns_df <- bq_project_query(
+    project,
+    query
+  ) %>% bq_table_download()
+  
+  # Check if the table wasn't found
+  if (nrow(columns_df) == 0) {
+    warning(glue("Table '{table}' was not found in {project}.{dataset}"))
+  }
+  
+  return(columns_df)
+}
+
+#' Compare tables across different datasets
+#'
+#' @param table1 A list with project, dataset, and table for the first table
+#' @param table2 A list with project, dataset, and table for the second table
+#' @return A dataframe with columns: table_name, column_name, data_type, ordinal_position, project, dataset
+#'
+compare_tables_across_datasets <- function(table1, table2) {
+  # Get columns for each table
+  columns_table1 <- get_table_columns(
+    project = table1$project,
+    dataset = table1$dataset,
+    table = table1$table
+  )
+  
+  columns_table2 <- get_table_columns(
+    project = table2$project,
+    dataset = table2$dataset,
+    table = table2$table
+  )
+  
+  # Combine the results
+  combined_columns <- bind_rows(columns_table1, columns_table2)
+  
+  return(combined_columns)
+}
+
+# Example usage for comparing tables across datasets
+cross_dataset_comparison <- compare_tables_across_datasets(
+  table1 = list(project = bq_project, dataset = "tiktok_ads", table = "campaign_report_lifetime"),
+  table2 = list(project = bq_project, dataset = "tiktok_ads_tiktok_ads", table = "tiktok_ads__campaign_report")
 )
 
-# Print the first few rows
-head(all_columns)
+# Print the first few rows of the comparison
+head(cross_dataset_comparison)
 
-# Get a summary of column usage
-column_summary <- summarize_column_usage(all_columns)
-head(column_summary)
+# You can use the existing functions with the combined results
+# For example, to create a presence matrix showing which columns exist in which tables
+comparison_matrix <- create_column_presence_matrix(cross_dataset_comparison)
+# convert to long table with table names as columns and column names as rows
 
-# Create a presence matrix
-presence_matrix <- create_column_presence_matrix(all_columns)
-head(presence_matrix[, 1:10])  # Show first 10 columns only
+comparison_matrix <- comparison_matrix %>%
+  pivot_longer(
+    cols = -table_name,
+    names_to = "column_name",
+    values_to = "present"
+  ) %>%
+  mutate(present = ifelse(present, "Yes", "No")) %>%
+  pivot_wider(names_from = table_name, values_from = present) 
 
-# Find common columns
-common_columns <- find_common_columns(all_columns)
-print(common_columns)
 
-# Example with specific tables
-selected_columns <- get_dataset_columns(
-  project = bq_project,
-  dataset = bq_dataset,
-  selected_tables = c("adgroup_history", "campaign_history")
-)
 
-# Print the first few rows of the selected tables
-head(selected_columns)
+
+
+head(comparison_matrix)
+
+# Or to find common columns between the two tables
+common_columns_across_datasets <- find_common_columns(cross_dataset_comparison)
+print(common_columns_across_datasets)

@@ -3,7 +3,8 @@ create or replace view looker-studio-pro-452620.repo_tiktok.mart__tiktok__ad_dai
 WITH
 agh as( -- AD GROUP HISTORY CTE
   select 
-    adgroup_id, 
+    adgroup_id,
+    
     optimization_goal as agh_optimization_goal,
     optimization_event as agh_optimization_event
   from looker-studio-pro-452620.repo_tiktok.stg2__adgroup_history_deduped_filtered

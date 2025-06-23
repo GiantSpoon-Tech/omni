@@ -1,7 +1,7 @@
 --
 --create or replace table `looker-studio-pro-452620.repo_tables.basis` as
 
-CREATE OR REPLACE VIEW `looker-studio-pro-452620.repo_stg.basis_plus_utms`
+CREATE OR REPLACE VIEW `looker-studio-pro-452620.repo_stg.basis_plus_utms_v2`
 OPTIONS (
   description = "Basis delivery joined to parsed UTM parameters. EDIT HERE: dev/sql/base/basis/stg2__basis__delivery_with_utms.sql.",
   labels = [ ("layer","stg2"), ("version", "final")]            -- optional
@@ -22,13 +22,13 @@ WITH
   del AS (
   SELECT
     *,
-    IFNULL(
-      concat(REGEXP_EXTRACT(placement, r'CP_(\d+)')," || ",cleaned_creative_name),
-      CONCAT(placement," || ", creative_name)) AS del_key,
+    -- IFNULL(
+    --   concat(REGEXP_EXTRACT(placement, r'CP_(\d+)')," || ",cleaned_creative_name),
+    --   CONCAT(placement," || ", creative_name)) AS del_key,
 
   FROM
-    `looker-studio-pro-452620.final_views.basis_view`)
-    --looker-studio-pro-452620.repo_stg.basis_delivery )
+    --`looker-studio-pro-452620.final_views.basis_view`)
+    `looker-studio-pro-452620.repo_stg.basis_delivery` )
 
 SELECT
   del.*,
@@ -37,19 +37,27 @@ SELECT
   utm.placement as placement__utms,
   utm.id as pl_id__utm,
   utm_source, utm_medium, utm_campaign, utm_term, utm_content,
-  concat(utm.id," || ", utm.cleaned_creative_name) as utm_key,
+  concat(
+    lower(utm.placement),
+    --utm.id
+    " || ", utm.cleaned_creative_name) as utm_key,
   
   --COUNT(DISTINCT utm_content) OVER (PARTITION BY placement) AS utm_content_count
 FROM
   del
+--LEFT outer JOIN
 LEFT JOIN
   `looker-studio-pro-452620.repo_stg.basis_utms_stg_view` utm 
 ON
-  del_key = concat(utm.id," || ", utm.cleaned_creative_name)
+  del_key = concat(
+    --utm.id
+    lower(utm.placement)
+    ," || ", utm.cleaned_creative_name)
 where 
 --utm_medium != ""
-impressions + clicks > 0 and
-campaign not like '%GE%' 
+--impressions + clicks > 0 and
+campaign not like '%GE%' and
+campaign not like 'Ritual%'
 
   -- and del.id IN (
   --   '3127238', '3127241', '3127243', '3127244', '3127245',
@@ -59,5 +67,5 @@ campaign not like '%GE%'
   -- )
 
 ORDER BY
-  utm_medium DESC
+  date DESC
 NULLS first

@@ -1,3 +1,69 @@
+--V2--------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE `looker-studio-pro-452620.repo_tiktok.dedupe_table_by_primary_id_v2`(
+  IN source_table STRING
+)
+BEGIN
+  DECLARE id_field STRING;
+  DECLARE source_full STRING;
+  DECLARE target_full STRING;
+  DECLARE order_by_clause STRING;
+  DECLARE has_updated_at BOOL;
+  DECLARE has_fivetran_synced BOOL;
+
+  -- Derive key and table names
+  SET id_field = FORMAT('%s_id', SPLIT(source_table, '_')[OFFSET(0)]);
+  SET source_full = FORMAT("giant-spoon-299605.tiktok_ads.%s", source_table);
+  SET target_full = FORMAT("looker-studio-pro-452620.repo_tiktok.stg__%s_deduped", source_table);
+
+  -- Check if columns exist in the tiktok_ads dataset
+  SET has_updated_at = EXISTS (
+    SELECT 1
+    FROM `giant-spoon-299605.tiktok_ads.INFORMATION_SCHEMA.COLUMNS`
+    WHERE table_name = source_table
+      AND table_schema = 'tiktok_ads'
+      AND column_name = 'updated_at'
+  );
+
+  SET has_fivetran_synced = EXISTS (
+    SELECT 1
+    FROM `giant-spoon-299605.tiktok_ads.INFORMATION_SCHEMA.COLUMNS`
+    WHERE table_name = source_table
+      AND table_schema = 'tiktok_ads'
+      AND column_name = '_fivetran_synced'
+  );
+
+  -- Build ORDER BY clause dynamically
+  SET order_by_clause = (
+    SELECT
+      CASE
+        WHEN has_updated_at AND has_fivetran_synced THEN 'updated_at DESC, _fivetran_synced DESC'
+        WHEN has_updated_at THEN 'updated_at DESC'
+        WHEN has_fivetran_synced THEN '_fivetran_synced DESC'
+        ELSE '1'
+      END
+  );
+
+  -- Execute deduplication query
+  EXECUTE IMMEDIATE FORMAT("""
+    CREATE OR REPLACE TABLE `%s` AS
+    SELECT *
+    FROM (
+      SELECT *, 
+             ROW_NUMBER() OVER (
+               PARTITION BY %s 
+               ORDER BY %s
+             ) AS dedupe
+      FROM `%s`
+    )
+    WHERE dedupe = 1
+  """, target_full, id_field, order_by_clause, source_full);
+
+END;
+
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+
 CREATE OR REPLACE PROCEDURE `looker-studio-pro-452620.repo_tiktok.dedupe_table_by_primary_id`(
   IN source_table STRING
 )

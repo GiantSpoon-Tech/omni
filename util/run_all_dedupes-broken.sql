@@ -1,4 +1,4 @@
-anchor_clicksCREATE OR REPLACE PROCEDURE `looker-studio-pro-452620.repo_tiktok.run_all_dedupes`()
+CREATE OR REPLACE PROCEDURE `looker-studio-pro-452620.repo_util.run_all_dedupes`()
 BEGIN
   /*
   --------------------------------------------------------------------------------

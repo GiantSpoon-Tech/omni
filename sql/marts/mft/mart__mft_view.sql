@@ -48,7 +48,8 @@ SELECT
   cleaned_creative_name as creative
   
 FROM
-  `looker-studio-pro-452620.repo_stg.basis_plus_utms`
+  --`looker-studio-pro-452620.repo_stg.basis_plus_utms` update 6/17
+  `looker-studio-pro-452620.repo_stg.basis_plus_utms_v2`
   WHERE date >= DATE '2025-01-01' 
   and package_roadblock like '%MASS%'
   and impressions >10;

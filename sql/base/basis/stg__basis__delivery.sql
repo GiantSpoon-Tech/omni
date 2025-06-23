@@ -18,20 +18,55 @@ SELECT
   *,
   REGEXP_EXTRACT(placement, r'CP_(\d+)') AS id,
   LOWER(
-    REGEXP_REPLACE(
-      LOWER(
-        REPLACE(
-          REGEXP_EXTRACT(
-            creative_name,
-            r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'   -- strip numeric prefix & size suffix
-          ),
-          ' ',                                        -- remove spaces
-          ''
-        )
+    regexp_replace(
+      REGEXP_REPLACE(
+        LOWER(
+          REPLACE(
+            REGEXP_EXTRACT(
+              creative_name,
+              r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'   -- strip numeric prefix & size suffix
+            ),
+            ' ',                                        -- remove spaces
+            ''
+          )
+        ),
+        r'(^peacock_|_peacock$)',                       -- drop “peacock_” or “_peacock”
+        ''
       ),
-      r'(^peacock_|_peacock$)',                       -- drop “peacock_” or “_peacock”
-      ''
-    )
-  ) AS cleaned_creative_name
+    r'[^a-zA-Z0-9]',
+    ''
+    )  
+  ) AS cleaned_creative_name,
+  IFNULL(
+    concat(
+      lower(placement),
+      --REGEXP_EXTRACT(placement, r'CP_(\d+)'),
+      " || ",
+      LOWER(
+        regexp_replace(
+          REGEXP_REPLACE(
+            LOWER(
+              REPLACE(
+                REGEXP_EXTRACT(
+                  creative_name,
+                  r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'   -- strip numeric prefix & size suffix
+                ),
+                ' ',                                        -- remove spaces
+                ''
+              )
+            ),
+            r'(^peacock_|_peacock$)',                       -- drop “peacock_” or “_peacock”
+            ''
+          ),
+        r'[^a-zA-Z0-9]',
+        ''
+        )  
+      )
+    ),
+    CONCAT(placement," || ", creative_name)
+  ) AS del_key,
 FROM
   `giant-spoon-299605.data_model_2025.basis_master2`;
+
+-- select
+-- count(distinct placement), count(distinct REGEXP_EXTRACT(placement, r'CP_(\d+)') ) from `repo_stg.basis_delivery`

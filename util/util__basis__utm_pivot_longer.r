@@ -10,7 +10,35 @@ df <- read_excel(
   skip = 6,
 ) %>%
   clean_names()
+test <- db_query_fields(con, "basis_utms_raw_25Q1_v2")
+# TODO: upload df to bq table "basis_utms_raw_25Q1_v2"
+# Upload raw df to BigQuery table "basis_utms_raw_25Q1_v2"
+dbWriteTable(
+  con,
+  name = "basis_utms_raw_25Q1_v2",
+  value = df,
+  overwrite = TRUE # set to FALSE and use append=TRUE to append instead
+)
 
+
+
+
+
+# bq_table_create(
+#   project = "looker-studio-pro-452620",
+#   dataset = "20250327_data_model",
+#   table = "basis_utms_raw_25Q1_v2",
+#   schema = list(
+#     list(name = "creative_num", type = "INTEGER"),
+#     list(name = "creative_name", type = "STRING"),
+#     list(name = "creative_url", type = "STRING"),
+#     list(name = "creative_asset_link", type = "STRING"),
+#     list(name = "creative_edo_tag", type = "STRING"),
+#     list(name = "creative_disqo_tag", type = "STRING"),
+#     list(name = "creative_video_amp_tag", type = "STRING"),
+#     list(name = "creative_3p_or_1p_tag", type = "STRING")
+#   )
+# )
 
 
 # Make all creative columns follow creative_<number>_<attribute>
@@ -46,10 +74,6 @@ names(creative_long) <-
   str_replace_all(names(creative_long), "creative_NA_", "") # Replace underscores with dots in column names
 
 
-#print as tidy list of columns
-View((names(creative_long) %>% as_tibble() %>% mutate(name = names(creative_long)) %>% select(name)))
-View(as.matrix(names(creative_long), quote = FALSE))
-
 
 
 utms_table <- creative_long %>% select(
@@ -57,6 +81,7 @@ utms_table <- creative_long %>% select(
   2:16
   )
 
+#print as tidy list of columns
 cat(paste0("`", colnames(utms_table), "`", collapse = ",\n"))
 
 project <- "looker-studio-pro-452620"

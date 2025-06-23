@@ -22,14 +22,18 @@ SELECT
 `end_date`,
 `creative_num`,
 `name` as creative_name,
-lower(
-replace(
-    
-    REGEXP_EXTRACT(name, r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'),
-    ' ' ,
-    ''
-    )
- ) AS cleaned_creative_name,
+-- [cleaned_creative_name] standardizes creative names to DCM Creative
+  -- Extracts the core creative name by:
+  --   1. Removing any leading numeric prefix (e.g., "123_")
+  --   2. Capturing the main name up to (but not including) any trailing size suffix (e.g., "_300x250")
+  --   3. Removing all spaces from the result
+  --   4. Converting to lowercase for normalization
+  -- Example: "123_Spring Sale_300x250" → "springsale"
+  lower(replace(REGEXP_EXTRACT(name, r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'),
+      ' ' ,
+      ''
+      )
+) AS cleaned_creative_name,
 `asset_link`,
 `edo_tag`,
 `disqo_tag`,
@@ -44,7 +48,9 @@ REGEXP_EXTRACT(url, 'utm_term=(.*)') AS utm_term,
 REGEXP_EXTRACT(url, 'utm_content=(.*?)&') AS utm_content
 
 FROM
-  `looker-studio-pro-452620.20250327_data_model.basis_utms_pivoted`;
+ -- `looker-studio-pro-452620.20250327_data_model.basis_utms_pivoted`;
+ `looker-studio-pro-452620.20250327_data_model.basis_utms_pivoted_unioned`;
+ 
 
 --ARCHIVE
   -- create or replace table `looker-studio-pro-452620.repo_stg.basis_utms` as

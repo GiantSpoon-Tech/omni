@@ -22,14 +22,18 @@ SELECT
 `end_date`,
 `creative_num`,
 `name` as creative_name,
-lower(
-replace(
-    
-    REGEXP_EXTRACT(name, r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'),
-    ' ' ,
-    ''
-    )
- ) AS cleaned_creative_name,
+-- [cleaned_creative_name] standardizes creative names to DCM Creative
+  -- Extracts the core creative name by:
+  --   1. Removing any leading numeric prefix (e.g., "123_")
+  --   2. Capturing the main name up to (but not including) any trailing size suffix (e.g., "_300x250")
+  --   3. Removing all spaces from the result
+  --   4. Converting to lowercase for normalization
+  -- Example: "123_Spring Sale_300x250" → "springsale"
+  lower(replace(REGEXP_EXTRACT(name, r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'),
+      ' ' ,
+      ''
+      )
+) AS cleaned_creative_name,
 `asset_link`,
 `edo_tag`,
 `disqo_tag`,

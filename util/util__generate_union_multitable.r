@@ -4,13 +4,13 @@ library(dplyr)
 library(glue)
 library(stringr)
 
-bq_project  <- "giant-spoon-299605"
-bq_dataset  <- "tiktok_ads_tiktok_ads"
+bq_project  = "looker-studio-pro-452620"
+bq_dataset  = "repo_tiktok"
 
 tables_filter <- c(  # only these tables
-                    #   "campaign_history" 
-                    #   , "ad_history"
-                    #   , 
+                    "stg2__campaign_report_lifetime_deduped_filtered"
+                       , "stg2__ad_report_lifetime_deduped_filtered"
+                       , "stg2__adgroup_report_lifetime_deduped_filtered"
                       )  # nolint
 
 connectToBigQuery <- function(project_id = bq_project) {
@@ -145,10 +145,10 @@ qry_selected <- generate_union_all(
   project  = bq_project,
   dataset  = bq_dataset,
   selected_tables = tables_filter,  # only these tables
-  #target = "giant-spoon-299605.data_model_2025.tiktok_selected_union"  # optional
+  target = "looker-studio-pro-452620.repo_tiktok.stg3__lifetime_unioned"  # optional
 )
 cat(qry_selected)   # inspect or bq_project_query() it
-
+bq_project_query("looker-studio-pro-452620", qry_selected)
 # Run the query
 #a <- tbl(bq_project_query("giant-spoon-299605", qry))
 # as_bq_dataset(a)

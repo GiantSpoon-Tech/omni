@@ -13,11 +13,11 @@
 BEGIN
 
 -- Step 1: Declare table inputs
-DECLARE dataset_a STRING DEFAULT 'giant-spoon-299605.tiktok_ads_tiktok_ads' ;
-DECLARE table_a STRING DEFAULT 'tiktok_ads__ad_group_report';
+DECLARE dataset_a STRING DEFAULT 'looker-studio-pro-452620.20250327_data_model' ;
+DECLARE table_a STRING DEFAULT 'basis_utms_pivoted';
 
-DECLARE dataset_b STRING DEFAULT 'giant-spoon-299605.tiktok_ads_tiktok_ads';
-DECLARE table_b STRING DEFAULT 'tiktok_ads__ad_report';
+DECLARE dataset_b STRING DEFAULT 'looker-studio-pro-452620.20250327_data_model';
+DECLARE table_b STRING DEFAULT 'basis_utms_pivoted_q2_v2';
 
 -- Step 2: Declare result variables
 DECLARE select_a STRING;

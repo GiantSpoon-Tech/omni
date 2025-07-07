@@ -48,7 +48,9 @@ REGEXP_EXTRACT(url, 'utm_term=(.*)') AS utm_term,
 REGEXP_EXTRACT(url, 'utm_content=(.*?)&') AS utm_content
 
 FROM
-  `looker-studio-pro-452620.20250327_data_model.basis_utms_pivoted`;
+ -- `looker-studio-pro-452620.20250327_data_model.basis_utms_pivoted`;
+ `looker-studio-pro-452620.20250327_data_model.basis_utms_pivoted_unioned`;
+ 
 
 --ARCHIVE
   -- create or replace table `looker-studio-pro-452620.repo_stg.basis_utms` as

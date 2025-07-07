@@ -1,39 +1,65 @@
-CREATE OR REPLACE VIEW `looker-studio-pro-452620.repo_mart.mart__olipop__crossplatform` AS
+CREATE OR REPLACE VIEW `looker-studio-pro-452620.repo_stg.stg__olipop__crossplatform_raw` AS
+
 -- ═════════════════════════════════════════════════════════════════════════════
--- View : mart__olipop__crossplatform
+-- View         : mart__olipop__crossplatform
 -- ---------------------------------------------------------------------------
--- Purpose      : Combine core delivery stats with cross-platform video-view
---                metrics for the Olipop account, providing a single source of
---                truth for downstream mart & Looker models.
+-- Purpose      : Unite core delivery metrics with cross-platform video-view
+--                engagement for the Olipop account, giving Looker & downstream
+--                marts a single ad-day grain fact table.
 --
 -- Input tables :
 --   • `giant-spoon-299605.ad_reporting_transformed.ad_reporting__ad_report` AS a
---       - Delivery-level data (impressions, clicks, cost, etc.)
---   • `looker-studio-pro-452620.repo_mart.stg__videoviews_v2`              AS b
---       - Normalised 25/50/75/100-percent video-view counts
+--       – Delivery data (impressions, clicks, spend, etc.)
+--   • `looker-studio-pro-452620.repo_stg.stg__olipop_videoviews_crossplatform` AS b
+--       – Normalised video metrics (views at 25 / 50 / 75 / 100 %, play count,
+--         hook-rate numerator)
 --
 -- Join keys    : source_relation · date_day · campaign_id · ad_group_id · ad_id
 --
--- Output       : All columns from table a (see SELECT below).  
---                ⚠️  Currently no fields from b are surfaced; the LEFT JOIN
---                is used only for row-level alignment.  Add b.* or specific
---                columns if you need the video-view metrics exposed.
+-- Output       : • All columns from table a  
+--                • Selected video metrics from table b →  
+--                    video_play, video_views_p_25, video_views_p_50,  
+--                    video_views_p_75, video_views_p_100, hookrate_num
 --
--- Refresh      : Scheduled via Cloud Composer (hourly).  Ensure both staging
---                sources finish upstream before the view is queried.
+-- Refresh      : Hourly via Cloud Composer.  Confirm both staging sources are
+--                complete before queries run.
 --
--- Author       : Gene Tsenter  |  Last updated: 2025-06-23
--- Maintenance  : Validate new columns in upstream tables before altering this
---                view.  Use strict column naming to avoid accidental schema
---                drift.  Tests live in repo_tests.mart__olipop__crossplatform.
+-- Author       : Gene Tsenter | Last updated 2025-06-23
+-- Maintenance  : Validate upstream schema changes before altering this view.
+--                Tests live in repo_tests.mart__olipop__crossplatform.
 -- ═════════════════════════════════════════════════════════════════════════════
+ 
+WITH
+a AS (
+  SELECT
+    *,
+    -- ── video_flag: mark rows from any “video”-named campaign, ad set, or ad ──
+    CASE
+      WHEN REGEXP_CONTAINS(LOWER(campaign_name), r'video')
+        OR REGEXP_CONTAINS(LOWER(ad_group_name), r'video')
+        OR REGEXP_CONTAINS(LOWER(ad_name),        r'video')
+      THEN 'video'
+      ELSE NULL        -- keeps column nullable; change to '' if you prefer
+    END AS video_flag
+  FROM `giant-spoon-299605.ad_reporting_transformed.ad_reporting__ad_report`
+),
 
-SELECT
-  a.*              -- delivery-level fields only; see header note above
-FROM
-  `giant-spoon-299605.ad_reporting_transformed.ad_reporting__ad_report` AS a
-LEFT JOIN
-  `looker-studio-pro-452620.repo_mart.stg__videoviews_v2`              AS b
+
+b as ( 
+  select
+  *
+  from  `looker-studio-pro-452620.repo_stg.stg__olipop_videoviews_crossplatform`  
+  )
+
+select a.*,
+    b.video_play, 
+    b.video_view,
+    b.video_views_p_25, 
+    b.video_views_p_50, 
+    b.video_views_p_75, 
+    b.video_views_p_100, 
+    b.hookrate_num  FROM a
+LEFT JOIN b
 ON
   a.source_relation = b.source_relation
   AND a.date_day     = b.date_day

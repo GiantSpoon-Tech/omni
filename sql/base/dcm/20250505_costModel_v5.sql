@@ -1,6 +1,7 @@
 
 
-CREATE OR REPLACE TABLE repo_tables.cost_model AS
+--CREATE OR REPLACE TABLE repo_tables.cost_model AS -- UPDATED 7/6/25
+CREATE OR REPLACE TABLE looker-studio-pro-452620.DCM.20250505_costModel_v5 AS
 
 --------------- version current UPDATED 05/13/25 ------------
 
@@ -300,7 +301,8 @@ cost_model AS (
 SELECT
   cf.*,
   cm.daily_recalculated_cost,
-  cm.daily_recalculated_cost_flag
+  cm.daily_recalculated_cost_flag,
+  cm.daily_recalculated_imps
 FROM calculated_fields cf
 LEFT JOIN cost_model cm
   ON cf.package_id = cm.package_id

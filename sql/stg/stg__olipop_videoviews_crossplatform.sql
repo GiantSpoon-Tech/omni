@@ -58,7 +58,7 @@ yt AS (
 /* ── TikTok Ads daily metrics ─────────────────────────────── */
 tt AS (
   SELECT
-      source_relation                           -- already present in mart view
+      "tiktok_ads"                              AS source_relation           -- already present in mart view
     , date_day                                  AS date                -- rename to match union schema
     , advertiser_id
     , CAST(campaign_id AS STRING)               AS campaign_id

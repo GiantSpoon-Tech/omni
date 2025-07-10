@@ -36,15 +36,18 @@ ard as ( -- ADS DELIVERY DAILY CTE
 alft as ( -- ADS DELIVERY DAILY CTE
   select
     ad_id as alft_id,
-    reach as reach_alft
-  from looker-studio-pro-452620.repo_tiktok.stg__ad_report_lifetime_deduped
+    max(reach) as reach_alft
+  --from looker-studio-pro-452620.repo_tiktok.stg__ad_report_lifetime_deduped
+  from looker-studio-pro-452620.repo_tiktok.stg3__lifetime_unioned_v2
+  where source_table = "stg2__ad_report_lifetime_deduped_filtered"
+  group by 1
 ),
 
 clft as (
   select
     campaign_id as clft_id,
     max(reach) as reach_clft
-  from looker-studio-pro-452620.repo_tiktok.stg3__lifetime_unioned
+  from looker-studio-pro-452620.repo_tiktok.stg3__lifetime_unioned_v2
   where source_table = "stg2__campaign_report_lifetime_deduped_filtered"
   group by 1
   
@@ -54,7 +57,7 @@ aglft as (
   select
     adgroup_id as aglft_id,
     max(reach) as reach_aglft
-  from looker-studio-pro-452620.repo_tiktok.stg3__lifetime_unioned
+  from looker-studio-pro-452620.repo_tiktok.stg3__lifetime_unioned_v2
   where source_table = "stg2__adgroup_report_lifetime_deduped_filtered"
   group by 1
 )

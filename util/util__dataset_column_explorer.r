@@ -3,6 +3,7 @@ library(dplyr)
 library(glue)
 library(stringr)
 library(tidyr)
+library("DBI")
 
 # Default project and dataset
 bq_project <- "giant-spoon-299605"
@@ -26,6 +27,14 @@ connectToBigQuery <- function(project_id = bq_project) {
   )
   return(con)
 }
+con <- dbConnect(
+  bigrquery::bigquery(),
+  project = "looker-studio-pro-452620",
+  dataset = "20250327_data_model",
+  billing = "looker-studio-pro-452620")
+
+df <- dbGetQuery(con, "SELECT * FROM basis_utms_raw_25Q1_v2")
+colnames(df)
 
 #' Get a dataframe of all columns in all tables in a dataset
 #'

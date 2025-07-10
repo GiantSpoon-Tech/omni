@@ -36,12 +36,10 @@ library(dplyr)
 library(glue)
 library(stringr)
 
-bq_project  <- "giant-spoon-299605"
-bq_dataset  <- "tiktok_ads_tiktok_ads"
+bq_project  <- "looker-studio-pro-452620"
+bq_dataset  <- "20250327_data_model"
 
-# tables_filter <- c(  # only these tables
-                   
-#                       )  # nolint
+tables_filter <- c()  # empty vector - no specific tables selected
 
 connectToBigQuery <- function(project_id = bq_project) {
   # Attempt to connect to the BigQuery project
@@ -62,6 +60,7 @@ connectToBigQuery <- function(project_id = bq_project) {
   return(con)
 }
 connectToBigQuery()
+
 generate_union_all <- function(project, dataset, table_like = "%", target = NULL, selected_tables = NULL) {
   # Get connection to use for SQL quoting
   con <- connectToBigQuery(project)
@@ -110,6 +109,11 @@ generate_union_all <- function(project, dataset, table_like = "%", target = NULL
     }
   }
 
+  # Check if any tables were found
+  if (nrow(columns) == 0) {
+    stop(paste("No tables found matching the criteria. Check if tables exist in dataset:", dataset))
+  }
+
   # 2. master column list and their types (ordered)
   master_cols_info <- columns %>%
     select(column_name, data_type) %>%
@@ -124,7 +128,13 @@ generate_union_all <- function(project, dataset, table_like = "%", target = NULL
 
   # 3. helper that builds a SELECT for one table
   build_select <- function(tbl) {
-    present <- columns %>% filter(table_name == tbl) %>% pull(column_name)
+    # Debug: Check if columns dataframe is accessible
+    print(paste("Processing table:", tbl))
+    print(paste("Columns dataframe has", nrow(columns), "rows"))
+    print("Column names in columns dataframe:")
+    print(colnames(columns))
+    
+    present <- columns[columns$table_name == tbl, "column_name"]
     select_list <- sapply(
       1:length(master_cols),
       function(i) {
@@ -148,9 +158,14 @@ generate_union_all <- function(project, dataset, table_like = "%", target = NULL
   }
 
   # 4. stitch the UNION ALL
-  sql <- columns$table_name %>%
-    unique() %>%
-    sort() %>%
+  # Debug: Check what we have before map_chr
+  table_names <- columns$table_name %>% unique() %>% sort()
+  print("Table names to process:")
+  print(table_names)
+  print("Length of table_names:")
+  print(length(table_names))
+  
+  sql <- table_names %>%
     purrr::map_chr(build_select) %>%
     str_flatten("\nUNION ALL\n")
 
@@ -163,10 +178,10 @@ generate_union_all <- function(project, dataset, table_like = "%", target = NULL
 
 # Example usage - Union ALL tables
 qry <- generate_union_all(
-  project  = "giant-spoon-299605",
-  dataset  = "tiktok_ads",
-  table_like = "%",                                   # all tables
-  target = "giant-spoon-299605.data_model_2025.tiktok_unionall"  # optional
+  project  = bq_project,
+  dataset  = bq_dataset,
+  table_like = "%basis_utms_pivoted%",                                   # all tables
+  #target = "looker-studio-pro-452620.data_model_2025.tiktok_unionall"  # optional
 )
 cat(qry)   # inspect or bq_project_query() it
 
@@ -180,5 +195,5 @@ qry_selected <- generate_union_all(
 cat(qry_selected)   # inspect or bq_project_query() it
 
 # Run the query
-a <- bq_project_query("giant-spoon-299605", qry)
+#a <- bq_project_query("giant-spoon-299605", qry)
 # nolint end

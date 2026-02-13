@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bq query:*)"
+    ]
+  },
+  "outputStyle": "Explanatory"
+}

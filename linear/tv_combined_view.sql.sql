@@ -1,0 +1,2 @@
+create or replace view looker-studio-pro-452620.landing.tv_combined as
+SELECT * FROM `looker-studio-pro-452620.landing.tv_local_estimates` union all (select * from `looker-studio-pro-452620.landing.tv_national_estimates`)

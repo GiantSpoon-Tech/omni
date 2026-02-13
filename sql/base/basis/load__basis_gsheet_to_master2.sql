@@ -5,6 +5,8 @@
 --               When matched, updates performance metrics. When not matched, inserts new rows.
 -- @source: giant-spoon-299605.data_model_2025.basis_gsheet2
 -- @target: giant-spoon-299605.data_model_2025.basis_master2
+
+
 MERGE INTO
   `giant-spoon-299605.data_model_2025.basis_master2` AS TARGET
 USING (
@@ -13,31 +15,32 @@ USING (
     SELECT *,
           ROW_NUMBER() OVER (
             PARTITION BY
-              day, campaign_name, line_item_name, basis_tactic, placement,
-              creative_name, creative_grouping_creative_grouping, basis_dsp_tactic_group
+              date, campaign, package, tactic, placement,
+              creative_name, creative_grouping, basis_dsp_tactic_group
             ORDER BY gmail_dt DESC  -- Or another reliable tiebreaker
           ) AS row_num
-    FROM `giant-spoon-299605.data_model_2025.basis_gsheet2`
+#   FROM `giant-spoon-299605.data_model_2025.basis_gsheet2`
+    FROM `looker-studio-pro-452620.landing.basis_master`
     WHERE latest_record = 1
-      AND day >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+      AND date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
   )
   WHERE row_num = 1
 ) AS SOURCE
 ON
-  TARGET.date = SOURCE.day
-  AND TARGET.campaign = SOURCE.campaign_name
-  AND TARGET.package_roadblock = SOURCE.line_item_name
-  AND TARGET.tactic = SOURCE.basis_tactic
+  TARGET.date = SOURCE.date
+  AND TARGET.campaign = SOURCE.campaign
+  AND TARGET.package_roadblock = SOURCE.package
+  AND TARGET.tactic = SOURCE.tactic
   AND TARGET.placement = SOURCE.placement
   AND TARGET.creative_name = SOURCE.creative_name
-  AND TARGET.creative_grouping = SOURCE.creative_grouping_creative_grouping
+  AND TARGET.creative_grouping = SOURCE.creative_grouping
   AND TARGET.basis_dsp_tactic_group = SOURCE.basis_dsp_tactic_group
 
 WHEN MATCHED THEN
   UPDATE SET
     TARGET.impressions = SOURCE.impressions,
     TARGET.clicks = SOURCE.clicks,
-    TARGET.media_cost = SOURCE.delivered_spend,
+    TARGET.media_cost = SOURCE.media_cost,
     TARGET.video_audio_plays = SOURCE.video_audio_plays,
     TARGET.video_views = SOURCE.video_views,
     TARGET.video_audio_fully_played = SOURCE.video_audio_fully_played,
@@ -62,17 +65,17 @@ WHEN NOT MATCHED THEN
     viewable_impressions
   )
   VALUES (
-    SOURCE.day,
-    SOURCE.campaign_name,
-    SOURCE.line_item_name,
-    SOURCE.basis_tactic,
+    SOURCE.date,
+    SOURCE.campaign,
+    SOURCE.package,
+    SOURCE.tactic,
     SOURCE.placement,
     SOURCE.creative_name,
-    SOURCE.creative_grouping_creative_grouping,
+    SOURCE.creative_grouping,
     SOURCE.basis_dsp_tactic_group,
     SOURCE.impressions,
     SOURCE.clicks,
-    SOURCE.delivered_spend,
+    SOURCE.media_cost,
     SOURCE.video_audio_plays,
     SOURCE.video_views,
     SOURCE.video_audio_fully_played,

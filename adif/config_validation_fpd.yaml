@@ -1,0 +1,76 @@
+# Configuration for validating existing staging view vs updated FPD
+# Usage: Rscript util_validate_two_sources.r config_validation_fpd.yaml
+
+# BigQuery project
+project: "looker-studio-pro-452620"
+
+# Authentication email
+auth_email: "gene.tsenter@giantspoon.com"
+
+# Output directory for validation files
+output_dir: "/Users/eugenetsenter/Looker_clonedRepo/looker_personal/adif/data"
+
+# Source A: Existing staging view
+source_a:
+  label: "Existing Staging View"
+  table: "repo_stg.adif__prisma_expanded_plus_dcm_view_v3_test"
+
+  # Join key columns in Source A
+  join_key_columns:
+    - "package_id_joined"
+    - "date"
+
+  # Metric columns to compare (name: column_name)
+  metrics:
+    fpd_impressions: "fpd_impressions"
+    fpd_spend: "fpd_spend"
+    fpd_clicks: "fpd_clicks"
+    dcm_impressions: "d_daily_recalculated_imps"
+    dcm_spend: "d_daily_recalculated_cost"
+    final_impressions: "final_impressions"
+    final_spend: "final_spend"
+
+  # Optional: dimension columns for context
+  dimensions:
+    flight_status: "flight_status_flag"
+
+  # Optional: WHERE clause to filter data
+  where: "package_id_joined IS NOT NULL"
+
+# Source B: Updated FPD data
+source_b:
+  label: "Updated FPD"
+  table: "landing.adif_updated_fpd_daily"
+
+  # Join key columns in Source B
+  join_key_columns:
+    - "package_id"
+    - "date"
+
+  # Metric columns to compare
+  metrics:
+    fpd_impressions: "daily_fpd_impressions"
+    fpd_spend: "daily_fpd_spend"
+
+  # Optional: dimension columns
+  dimensions:
+    supplier: "supplier_name"
+    initiative: "initiative"
+
+  # Optional: WHERE clause
+  where: "package_id IS NOT NULL"
+
+# Comparison settings
+comparison:
+  # Standardized join key names (used in output)
+  join_keys:
+    - "package_id"
+    - "date"
+
+  # Aggregation keys (for package-level summary)
+  # If not specified, defaults to first join key
+  aggregation_keys:
+    - "package_id"
+
+  # Output file prefix
+  output_prefix: "validation_fpd"

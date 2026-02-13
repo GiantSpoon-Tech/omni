@@ -13,11 +13,12 @@
 BEGIN
 
 -- Step 1: Declare table inputs
-DECLARE dataset_a STRING DEFAULT 'looker-studio-pro-452620.20250327_data_model' ;
-DECLARE table_a STRING DEFAULT 'basis_utms_pivoted';
 
-DECLARE dataset_b STRING DEFAULT 'looker-studio-pro-452620.20250327_data_model';
-DECLARE table_b STRING DEFAULT 'basis_utms_pivoted_q2_v2';
+DECLARE dataset_a STRING DEFAULT 'looker-studio-pro-452620.DCM' ;
+DECLARE table_a STRING DEFAULT '20250505_costModel_v5';
+
+DECLARE dataset_b STRING DEFAULT 'looker-studio-pro-452620.landing';
+DECLARE table_b STRING DEFAULT 'adif_fpd_data';
 
 -- Step 2: Declare result variables
 DECLARE select_a STRING;

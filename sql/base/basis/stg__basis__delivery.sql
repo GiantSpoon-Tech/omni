@@ -9,7 +9,8 @@
 --   Downstream models use these fields to join with UTM metadata and
 --   to de-duplicate creatives.
 --
--- @source: giant-spoon-299605.data_model_2025.basis_master2
+-- @source: UPDATED 09/26/25 `looker-studio-pro-452620.landing.basis_master`  
+--          OUTDATED :giant-spoon-299605.data_model_2025.basis_master2
 -- @target: repo_stg.basis_delivery   -- ✓ view
 -- ---------------------------------------------------------------------------
 
@@ -66,7 +67,7 @@ SELECT
     CONCAT(placement," || ", creative_name)
   ) AS del_key,
 FROM
-  `giant-spoon-299605.data_model_2025.basis_master2`;
+  `looker-studio-pro-452620.landing.basis_master`;
 
 -- select
 -- count(distinct placement), count(distinct REGEXP_EXTRACT(placement, r'CP_(\d+)') ) from `repo_stg.basis_delivery`

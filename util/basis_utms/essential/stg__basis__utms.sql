@@ -9,60 +9,71 @@ CREATE OR REPLACE VIEW `looker-studio-pro-452620.repo_stg.basis_utms_stg_view_25
 
   Source:  looker-studio-pro-452620.landing.basis_utms_unioned  
   Target:  looker-studio-pro-452620.repo_stg.basis_utms_stg_view  
-  Join Key: id + cleaned_creative_name  
+  Join Key: LOWER(placement) + cleaned_creative_name (aligned to repo_stg.basis_delivery.del_key)  
 
   Last Edit: 2025-07-16 (formatting & documentation only — logic unchanged)
 =======================================================================================*/
 
 
+WITH normalized AS (
+  SELECT
+      /* ---------- Metadata --------------------------------------------------------- */
+      `line_item`      AS package_name,
+      `tag_placement`  AS placement,
+      `formats`,
+      `size`,
+      `start_date`,
+      `end_date`,
+
+      /* ---------- Creative --------------------------------------------------------- */
+      `name`           AS creative_name,
+
+      /* Delivery-aligned creative cleaner used in repo_stg.basis_delivery.del_key */
+      LOWER(
+        REGEXP_REPLACE(
+          REGEXP_REPLACE(
+            LOWER(
+              REPLACE(
+                REGEXP_EXTRACT(
+                  name,
+                  r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'
+                ),
+                ' ',
+                ''
+              )
+            ),
+            r'(^peacock_|_peacock$)',
+            ''
+          ),
+          r'[^a-zA-Z0-9]',
+          ''
+        )
+      ) AS cleaned_creative_name,
+
+      /* Secondary cleaner retained for QA parity */
+      LOWER(
+        REPLACE(
+          REGEXP_EXTRACT(name, r'^([A-Za-z0-9\s_]+?)(?:_?\d+x\d+.*)?$'),
+          ' ',
+          ''
+        )
+      ) AS cleaned_creative_name2,
+
+      /* ---------- URL & UTM parsing ----------------------------------------------- */
+      url,
+      REGEXP_EXTRACT(url, r'-(\d+)&utm_term')      AS id,
+      REGEXP_EXTRACT(url, r'utm_source=(.*?)&')    AS utm_source,
+      REGEXP_EXTRACT(url, r'utm_medium=(.*?)&')    AS utm_medium,
+      REGEXP_EXTRACT(url, r'utm_campaign=(.*?)&')  AS utm_campaign,
+      REGEXP_EXTRACT(url, r'utm_term=(.*)')        AS utm_term,
+      REGEXP_EXTRACT(url, r'[?&]utm_content=([^&#]*)') AS utm_content
+  FROM
+      `looker-studio-pro-452620.landing.basis_utms_unioned`
+)
 SELECT
-    /* ---------- Metadata ----------------------------------------------------------- */
-    `line_item`      AS package_name,
-    `tag_placement`  AS placement,
-    `formats`,
-    `size`,
-    `start_date`,
-    `end_date`,
-
-    /* ---------- Creative ----------------------------------------------------------- */
-    `name`           AS creative_name,
-
-    /* Cleaned creative name
-       Steps:
-         1  Remove any leading numeric prefix (e.g., "123_")  
-         2  Capture the main name, stopping before any trailing size suffix (e.g., "_300x250")  
-         3  Strip spaces  
-         4  Lower-case result
-       Example: "123_Spring Sale_300x250" → "springsale"
-    */
-    LOWER(
-      REPLACE(
-        REGEXP_EXTRACT(name, r'^(?:\d+_)?([^_]+.*?)(?:\d+x\d+.*)?$'),
-        ' ',
-        ''
-      )
-    ) AS cleaned_creative_name,
-
-    /* Secondary cleaned name retained for historical QA parity */
-    LOWER(
-      REPLACE(
-        REGEXP_EXTRACT(name, r'^([A-Za-z0-9\s_]+?)(?:_?\d+x\d+.*)?$'),
-        ' ',
-        ''
-      )
-    ) AS cleaned_creative_name2,
-
-    /* ---------- URL & UTM parsing --------------------------------------------------- */
-    url,
-    REGEXP_EXTRACT(url, r'-(\d+)&utm_term')      AS id,
-    REGEXP_EXTRACT(url, r'utm_source=(.*?)&')    AS utm_source,
-    REGEXP_EXTRACT(url, r'utm_medium=(.*?)&')    AS utm_medium,
-    REGEXP_EXTRACT(url, r'utm_campaign=(.*?)&')  AS utm_campaign,
-    REGEXP_EXTRACT(url, r'utm_term=(.*)')        AS utm_term,
-    REGEXP_EXTRACT(url, r'[?&]utm_content=([^&#]*)') AS utm_content
-
-FROM
-    `looker-studio-pro-452620.landing.basis_utms_unioned`;
+  *,
+  CONCAT(LOWER(placement), ' || ', cleaned_creative_name) AS utm_key_delivery_aligned
+FROM normalized;
     
 
 /*=======================================================================================

@@ -22,7 +22,8 @@ SELECT
   `daily_recalculated_cost` as cost,
   `impressions`,
   `clicks`,
-  creative
+
+  ,creative
   
 FROM
   `looker-studio-pro-452620.repo_stg.dcm_plus_utms`
@@ -67,6 +68,7 @@ SELECT
   utm_campaign,
   utm_content,
   utm_term,
+  
   SUM(cost) as Cost,
   SUM(impressions) as Impressions,
   SUM(clicks) as Clicks

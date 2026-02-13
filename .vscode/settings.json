@@ -1,3 +1,18 @@
 {
-    "files.autoSave": "onWindowChange"
+    "files.autoSave": "onWindowChange",
+    "gitdoc.enabled": false,
+    "chatgpt.openOnStartup": true,
+    "editor.tabCompletion": "on",
+    "editor.suggest.snippetsPreventQuickSuggestions": true,
+    "editor.suggestSelection": "recentlyUsedByPrefix",
+    "sqltools.connections": [
+        {
+            "name": "BigQuery",
+            "authenticator": "CLI",
+            "location": "us",
+            "previewLimit": 50,
+            "driver": "BigQuery",
+            "projectId": "looker-studio-pro-452620"
+        }
+    ]
 }

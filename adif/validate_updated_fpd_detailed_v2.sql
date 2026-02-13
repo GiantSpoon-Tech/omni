@@ -1,0 +1,276 @@
+/*******************************************************************************
+DETAILED VALIDATION v2: Compare Original vs New View with FPD Breakdown
+********************************************************************************
+Purpose: Compare metrics showing:
+- DCM (unchanged)
+- Original FPD only
+- Updated FPD only
+- Combined FPD (original + updated) - NEW in v3 schema
+- TOTAL (final_*)
+
+Last Updated: 2026-01-23
+*******************************************************************************/
+
+WITH
+
+-- Original view metrics by source
+original_view_metrics AS (
+  SELECT
+    'adif__prisma_expanded_plus_dcm_view_v3_test' AS view_name,
+    'DCM' AS data_source,
+    COUNT(*) AS row_count,
+    SUM(d_daily_recalculated_imps) AS impressions,
+    SUM(d_daily_recalculated_cost) AS spend
+  FROM `looker-studio-pro-452620.repo_stg.adif__prisma_expanded_plus_dcm_view_v3_test`
+  WHERE d_daily_recalculated_imps IS NOT NULL OR d_daily_recalculated_cost IS NOT NULL
+
+  UNION ALL
+
+  SELECT
+    'adif__prisma_expanded_plus_dcm_view_v3_test' AS view_name,
+    'Original FPD' AS data_source,
+    COUNT(*) AS row_count,
+    SUM(fpd_impressions) AS impressions,
+    SUM(fpd_spend) AS spend
+  FROM `looker-studio-pro-452620.repo_stg.adif__prisma_expanded_plus_dcm_view_v3_test`
+  WHERE fpd_impressions IS NOT NULL OR fpd_spend IS NOT NULL
+
+  UNION ALL
+
+  SELECT
+    'adif__prisma_expanded_plus_dcm_view_v3_test' AS view_name,
+    'Updated FPD' AS data_source,
+    0 AS row_count,
+    0 AS impressions,
+    0 AS spend
+
+  UNION ALL
+
+  SELECT
+    'adif__prisma_expanded_plus_dcm_view_v3_test' AS view_name,
+    'Combined FPD (orig + updated)' AS data_source,
+    COUNT(*) AS row_count,
+    SUM(fpd_impressions) AS impressions,
+    SUM(fpd_spend) AS spend
+  FROM `looker-studio-pro-452620.repo_stg.adif__prisma_expanded_plus_dcm_view_v3_test`
+  WHERE fpd_impressions IS NOT NULL OR fpd_spend IS NOT NULL
+
+  UNION ALL
+
+  SELECT
+    'adif__prisma_expanded_plus_dcm_view_v3_test' AS view_name,
+    'TOTAL (final_*)' AS data_source,
+    COUNT(*) AS row_count,
+    SUM(final_impressions) AS impressions,
+    SUM(final_spend) AS spend
+  FROM `looker-studio-pro-452620.repo_stg.adif__prisma_expanded_plus_dcm_view_v3_test`
+),
+
+-- New view with combined FPD
+new_view AS (
+  WITH
+  existing_view AS (
+    SELECT *
+    FROM `looker-studio-pro-452620.repo_stg.adif__prisma_expanded_plus_dcm_view_v3_test`
+  ),
+
+  updated_fpd AS (
+    SELECT
+      package_id,
+      date,
+      SUM(daily_fpd_impressions) AS fpd_updated_impressions,
+      SUM(daily_fpd_spend) AS fpd_updated_spend,
+      STRING_AGG(DISTINCT supplier_name, ', ' ORDER BY supplier_name) AS fpd_updated_suppliers,
+      STRING_AGG(DISTINCT initiative, ', ' ORDER BY initiative) AS fpd_updated_initiatives,
+      MAX(data_update_datetime) AS fpd_updated_data_timestamp
+    FROM `looker-studio-pro-452620.landing.adif_updated_fpd_daily`
+    GROUP BY package_id, date
+  ),
+
+  combined AS (
+    SELECT
+      e.* EXCEPT(fpd_impressions, fpd_spend, fpd_clicks, fpd_sends, fpd_opens, fpd_benchmark, fpd_benchmark_metric, fpd_creative),
+      e.fpd_impressions AS fpd_orig_impressions,
+      e.fpd_spend AS fpd_orig_spend,
+      e.fpd_clicks AS fpd_orig_clicks,
+      e.fpd_sends AS fpd_orig_sends,
+      e.fpd_opens AS fpd_orig_opens,
+      e.fpd_benchmark AS fpd_orig_benchmark,
+      e.fpd_benchmark_metric AS fpd_orig_benchmark_metric,
+      e.fpd_creative AS fpd_orig_creative,
+      u.fpd_updated_impressions,
+      u.fpd_updated_spend,
+      u.fpd_updated_suppliers,
+      u.fpd_updated_initiatives,
+      u.fpd_updated_data_timestamp,
+      COALESCE(e.fpd_impressions, 0) + COALESCE(u.fpd_updated_impressions, 0) AS fpd_impressions,
+      COALESCE(e.fpd_spend, 0) + COALESCE(u.fpd_updated_spend, 0) AS fpd_spend,
+      e.fpd_clicks AS fpd_clicks,
+      e.fpd_sends AS fpd_sends,
+      e.fpd_opens AS fpd_opens,
+      e.fpd_benchmark AS fpd_benchmark,
+      e.fpd_benchmark_metric AS fpd_benchmark_metric,
+      e.fpd_creative AS fpd_creative
+    FROM existing_view e
+    LEFT JOIN updated_fpd u
+      ON e.package_id_joined = u.package_id
+     AND e.date = u.date
+  ),
+
+  final_with_combined_fpd AS (
+    SELECT
+      *,
+      COALESCE(NULLIF(fpd_impressions, 0), d_daily_recalculated_imps) AS final_impressions_new,
+      COALESCE(NULLIF(fpd_spend, 0), d_daily_recalculated_cost) AS final_spend_new,
+      CASE
+        WHEN fpd_updated_impressions IS NOT NULL OR fpd_updated_spend IS NOT NULL THEN
+          CASE
+            WHEN fpd_orig_impressions IS NOT NULL OR fpd_orig_spend IS NOT NULL THEN 'fpd_combined'
+            ELSE 'fpd_updated_only'
+          END
+        WHEN fpd_orig_impressions IS NOT NULL OR fpd_orig_spend IS NOT NULL THEN 'fpd_original_only'
+        WHEN d_daily_recalculated_imps IS NOT NULL OR d_daily_recalculated_cost IS NOT NULL THEN 'dcm'
+        ELSE 'planned_only'
+      END AS data_source_primary
+    FROM combined
+  ),
+
+  pkg_rollups_updated AS (
+    SELECT
+      package_id_joined,
+      SUM(final_impressions_new) AS pkg_act_imps_new,
+      SUM(final_spend_new) AS pkg_act_spend_new,
+      SUM(fpd_orig_impressions) AS pkg_fpd_orig_impressions,
+      SUM(fpd_orig_spend) AS pkg_fpd_orig_spend,
+      SUM(fpd_updated_impressions) AS pkg_fpd_updated_impressions,
+      SUM(fpd_updated_spend) AS pkg_fpd_updated_spend,
+      SUM(fpd_impressions) AS pkg_fpd_combined_impressions,
+      SUM(fpd_spend) AS pkg_fpd_combined_spend
+    FROM final_with_combined_fpd
+    GROUP BY package_id_joined
+  )
+
+  SELECT
+    f.* EXCEPT(final_impressions, final_spend, pkg_act_imps, pkg_act_spend),
+    f.final_impressions_new AS final_impressions,
+    f.final_spend_new AS final_spend,
+    p.pkg_act_imps_new AS pkg_act_imps,
+    p.pkg_act_spend_new AS pkg_act_spend,
+    p.pkg_fpd_orig_impressions,
+    p.pkg_fpd_orig_spend,
+    p.pkg_fpd_updated_impressions,
+    p.pkg_fpd_updated_spend,
+    p.pkg_fpd_combined_impressions,
+    p.pkg_fpd_combined_spend
+  FROM final_with_combined_fpd f
+  LEFT JOIN pkg_rollups_updated p
+    ON f.package_id_joined = p.package_id_joined
+),
+
+-- New view metrics by source
+new_view_metrics AS (
+  SELECT
+    'adif__prisma_expanded_plus_dcm_updated_fpd_view_v3 (NEW)' AS view_name,
+    'DCM' AS data_source,
+    COUNT(*) AS row_count,
+    SUM(d_daily_recalculated_imps) AS impressions,
+    SUM(d_daily_recalculated_cost) AS spend
+  FROM new_view
+  WHERE d_daily_recalculated_imps IS NOT NULL OR d_daily_recalculated_cost IS NOT NULL
+
+  UNION ALL
+
+  SELECT
+    'adif__prisma_expanded_plus_dcm_updated_fpd_view_v3 (NEW)' AS view_name,
+    'Original FPD' AS data_source,
+    COUNT(*) AS row_count,
+    SUM(fpd_orig_impressions) AS impressions,
+    SUM(fpd_orig_spend) AS spend
+  FROM new_view
+  WHERE fpd_orig_impressions IS NOT NULL OR fpd_orig_spend IS NOT NULL
+
+  UNION ALL
+
+  SELECT
+    'adif__prisma_expanded_plus_dcm_updated_fpd_view_v3 (NEW)' AS view_name,
+    'Updated FPD' AS data_source,
+    COUNT(*) AS row_count,
+    SUM(fpd_updated_impressions) AS impressions,
+    SUM(fpd_updated_spend) AS spend
+  FROM new_view
+  WHERE fpd_updated_impressions IS NOT NULL OR fpd_updated_spend IS NOT NULL
+
+  UNION ALL
+
+  SELECT
+    'adif__prisma_expanded_plus_dcm_updated_fpd_view_v3 (NEW)' AS view_name,
+    'Combined FPD (orig + updated)' AS data_source,
+    COUNT(*) AS row_count,
+    SUM(fpd_impressions) AS impressions,
+    SUM(fpd_spend) AS spend
+  FROM new_view
+  WHERE fpd_impressions > 0 OR fpd_spend > 0
+
+  UNION ALL
+
+  SELECT
+    'adif__prisma_expanded_plus_dcm_updated_fpd_view_v3 (NEW)' AS view_name,
+    'TOTAL (final_*)' AS data_source,
+    COUNT(*) AS row_count,
+    SUM(final_impressions) AS impressions,
+    SUM(final_spend) AS spend
+  FROM new_view
+),
+
+-- Combine both views
+combined_metrics AS (
+  SELECT * FROM original_view_metrics
+  UNION ALL
+  SELECT * FROM new_view_metrics
+),
+
+-- Calculate deltas
+delta_metrics AS (
+  SELECT
+    'DELTA (New - Original)' AS view_name,
+    n.data_source,
+    n.row_count - o.row_count AS row_count,
+    n.impressions - o.impressions AS impressions,
+    n.spend - o.spend AS spend
+  FROM new_view_metrics n
+  INNER JOIN original_view_metrics o
+    ON n.data_source = o.data_source
+)
+
+-- Final output
+SELECT
+  view_name,
+  data_source,
+  FORMAT("%'d", row_count) AS row_count,
+  FORMAT("%'0.0f", IFNULL(impressions, 0)) AS impressions,
+  FORMAT("$%'0.2f", IFNULL(spend, 0)) AS spend
+FROM combined_metrics
+
+UNION ALL
+
+SELECT
+  view_name,
+  data_source,
+  FORMAT("%'+d", row_count) AS row_count,
+  FORMAT("%'+0.0f", IFNULL(impressions, 0)) AS impressions,
+  FORMAT("$%'+0.2f", IFNULL(spend, 0)) AS spend
+FROM delta_metrics
+
+ORDER BY
+  CASE
+    WHEN view_name = 'adif__prisma_expanded_plus_dcm_view_v3_test' THEN 1
+    WHEN view_name = 'adif__prisma_expanded_plus_dcm_updated_fpd_view_v3 (NEW)' THEN 2
+    WHEN view_name = 'DELTA (New - Original)' THEN 3
+  END,
+  CASE
+    WHEN data_source = 'DCM' THEN 1
+    WHEN data_source = 'Original FPD' THEN 2
+    WHEN data_source = 'Updated FPD' THEN 3
+    WHEN data_source = 'Combined FPD (orig + updated)' THEN 4
+    WHEN data_source = 'TOTAL (final_*)' THEN 5
+  END;

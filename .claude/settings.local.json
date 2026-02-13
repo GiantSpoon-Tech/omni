@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bq query:*)",
+      "Bash(bq show:*)",
+      "Bash(for table in \"DCM.20250505_costModel_v5\" \"landing.adif_fpd_data_ranged\" \"20250327_data_model.prisma_expanded_full\" \"landing.tv_local_estimates\" \"landing.tv_national_estimates\")",
+      "Bash(do)",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash(bq ls:*)"
+    ]
+  },
+  "outputStyle": "Learning"
+}

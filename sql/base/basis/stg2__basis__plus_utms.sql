@@ -81,22 +81,45 @@ CREATE OR REPLACE VIEW `looker-studio-pro-452620.repo_stg.basis_plus_utms_v3`
       `tag_placement`                           AS placement,
       `name`                                    AS creative_name,
       LOWER(
-        REPLACE( 
-          REGEXP_EXTRACT( 
-            name, r'^(?:\d+_)?([^_]+.*?)(?:\d+x\d+.*)?$'), ' ', '' ) 
+        REGEXP_REPLACE(
+          REGEXP_REPLACE(
+            LOWER(
+              REPLACE(
+                REGEXP_EXTRACT(
+                  name,
+                  r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'
+                ),
+                ' ',
+                ''
+              )
+            ),
+            r'(^peacock_|_peacock$)',
+            ''
+          ),
+          r'[^a-zA-Z0-9]',
+          ''
+        )
       )                                         AS cleaned_creative_name,
       -- Final cleaned name following the same transformations
-      REGEXP_REPLACE(                                            -- 7. collapse whitespace to “_”
-        REGEXP_REPLACE(                                          -- 6. drop chars that are *not* A–Z, a–z, 0–9 or space
-          LOWER(                                                 -- 5. lower-case
-            REGEXP_REPLACE(                                      -- 4. strip trailing _N×N pattern
-              REGEXP_REPLACE( name, r'0x0', ''),        -- 3. kill “0x0”
-              r'(?:_?\d+x\d+.*)?$', ''
-            )
+      LOWER(
+        REGEXP_REPLACE(
+          REGEXP_REPLACE(
+            LOWER(
+              REPLACE(
+                REGEXP_EXTRACT(
+                  name,
+                  r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'
+                ),
+                ' ',
+                ''
+              )
+            ),
+            r'(^peacock_|_peacock$)',
+            ''
           ),
-          r'[^A-Za-z0-9\s]', ''
-        ),
-        r'\s+', ''
+          r'[^a-zA-Z0-9]',
+          ''
+        )
       ) AS cleaned_creative_name_2,
       url                                       AS url,
       REGEXP_EXTRACT(url, r'-(\d+)&utm_term')   AS id,
@@ -178,35 +201,53 @@ utm4 as (
     --     REGEXP_EXTRACT(creative, r'^(?:\d+_)?([^_]+.*?)(?:\d+x\d+.*)?$'), ' ', '' ) 
     --   )                                      AS cleaned_creative_name,
     -- -- Final cleaned name following the same transformations
-    REGEXP_REPLACE(                                            -- 7. collapse whitespace to “_”
-      REGEXP_REPLACE(                                          -- 6. drop chars that are *not* A–Z, a–z, 0–9 or space
-        LOWER(                                                 -- 5. lower-case
-          REGEXP_REPLACE(                                      -- 4. strip trailing _N×N pattern
-            REGEXP_REPLACE( creative, r'0x0', ''),        -- 3. kill “0x0”
-            r'(?:_?\d+x\d+.*)?$', ''
-          )
+    LOWER(
+      REGEXP_REPLACE(
+        REGEXP_REPLACE(
+          LOWER(
+            REPLACE(
+              REGEXP_EXTRACT(
+                creative,
+                r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'
+              ),
+              ' ',
+              ''
+            )
+          ),
+          r'(^peacock_|_peacock$)',
+          ''
         ),
-        r'[^A-Za-z0-9\s]', ''
-      ),
-      r'\s+', ''
+        r'[^a-zA-Z0-9]',
+        ''
+      )
     ) AS cleaned_creative_name_2,
     utm_source,
     utm_medium,
     utm_campaign,
     utm_content,
     utm_term,
-    (concat(lower(placement)," || ",     REGEXP_REPLACE(                                            -- 7. collapse whitespace to “_”
-      REGEXP_REPLACE(                                          -- 6. drop chars that are *not* A–Z, a–z, 0–9 or space
-        LOWER(                                                 -- 5. lower-case
-          REGEXP_REPLACE(                                      -- 4. strip trailing _N×N pattern
-            REGEXP_REPLACE( creative, r'0x0', ''),        -- 3. kill “0x0”
-            r'(?:_?\d+x\d+.*)?$', ''
-          )
-        ),
-        r'[^A-Za-z0-9\s]', ''
-      ),
-      r'\s+', ''
-    ) )) as utm_utm_key
+    (concat(lower(placement)," || ",
+      LOWER(
+        REGEXP_REPLACE(
+          REGEXP_REPLACE(
+            LOWER(
+              REPLACE(
+                REGEXP_EXTRACT(
+                  creative,
+                  r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'
+                ),
+                ' ',
+                ''
+              )
+            ),
+            r'(^peacock_|_peacock$)',
+            ''
+          ),
+          r'[^a-zA-Z0-9]',
+          ''
+        )
+      )
+    )) as utm_utm_key
   
   from looker-studio-pro-452620.repo_stg.dcm_plus_utms_upload
 ),
@@ -216,22 +257,45 @@ SELECT
   `tag_placement`                           AS placement,
   `name`                                    AS creative_name,
   LOWER(
-    REPLACE( 
-      REGEXP_EXTRACT( 
-        name, r'^(?:\d+_)?([^_]+.*?)(?:\d+x\d+.*)?$'), ' ', '' )) 
+    REGEXP_REPLACE(
+      REGEXP_REPLACE(
+        LOWER(
+          REPLACE(
+            REGEXP_EXTRACT(
+              name,
+              r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'
+            ),
+            ' ',
+            ''
+          )
+        ),
+        r'(^peacock_|_peacock$)',
+        ''
+      ),
+      r'[^a-zA-Z0-9]',
+      ''
+    )
                                            AS cleaned_creative_name,
   -- Final cleaned name following the same transformations
-  REGEXP_REPLACE(                                            -- 7. collapse whitespace to “_”
-    REGEXP_REPLACE(                                          -- 6. drop chars that are *not* A–Z, a–z, 0–9 or space
-      LOWER(                                                 -- 5. lower-case
-        REGEXP_REPLACE(                                      -- 4. strip trailing _N×N pattern
-          REGEXP_REPLACE( name, r'0x0', ''),        -- 3. kill “0x0”
-          r'(?:_?\d+x\d+.*)?$', ''
-        )
+  LOWER(
+    REGEXP_REPLACE(
+      REGEXP_REPLACE(
+        LOWER(
+          REPLACE(
+            REGEXP_EXTRACT(
+              name,
+              r'^(?:\d+_)?([^_]+.*?)(?:_\d+x\d+.*)?$'
+            ),
+            ' ',
+            ''
+          )
+        ),
+        r'(^peacock_|_peacock$)',
+        ''
       ),
-      r'[^A-Za-z0-9\s]', ''
-    ),
-    r'\s+', ''
+      r'[^a-zA-Z0-9]',
+      ''
+    )
    ) AS cleaned_creative_name_2,
   url                                       AS url,
   REGEXP_EXTRACT(url, r'-(\d+)&utm_term')   AS id,

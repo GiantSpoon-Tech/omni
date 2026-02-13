@@ -1,0 +1,77 @@
+{
+  "generated_at": "2026-02-12 19:40:48 EST",
+  "workspace_root": "/Users/eugenetsenter/Looker_clonedRepo/looker_personal",
+  "scan_dirs": [
+    "/Users/eugenetsenter/Looker_clonedRepo/looker_personal/mft",
+    "/Users/eugenetsenter/Looker_clonedRepo/looker_personal/util"
+  ],
+  "workspace_out": "/Users/eugenetsenter/Looker_clonedRepo/looker_personal/current-work-skill/runs/retry-original-20260212-194033/v1/workspace-current-work.md",
+  "global_out": "/Users/eugenetsenter/Looker_clonedRepo/looker_personal/current-work-skill/runs/retry-original-20260212-194033/v1/global-current-work.md",
+  "project_out": "/Users/eugenetsenter/Looker_clonedRepo/looker_personal/current-work-skill/runs/retry-original-20260212-194033/v1/project-copy.md",
+  "open_tabs_detected": [
+    "/private/tmp/basis_utms_workbook.ipynb",
+    "/tmp/utm_updates_patched.sql",
+    "/Users/eugenetsenter/.cline/skills/know/bq_via_jupyter_example.ipynb",
+    "/Users/eugenetsenter/.codex/AGENTS.md"
+  ],
+  "session_files_used": [
+    "/Users/eugenetsenter/.codex/sessions/2026/02/12/rollout-2026-02-12T16-04-19-019c53ab-46dc-7fe3-92fd-10d7138bacb9.jsonl",
+    "/Users/eugenetsenter/.codex/sessions/2026/02/12/rollout-2026-02-12T16-01-53-019c53a9-0beb-7da0-afd0-3d459b226e16.jsonl",
+    "/Users/eugenetsenter/.codex/sessions/2026/02/12/rollout-2026-02-12T11-24-36-019c52ab-2efc-7433-a4ff-a21ad604d37b.jsonl",
+    "/Users/eugenetsenter/.codex/sessions/2026/02/11/rollout-2026-02-11T19-39-23-019c4f49-d18c-79a0-a31f-8b0663b8ccce.jsonl",
+    "/Users/eugenetsenter/.codex/sessions/2026/02/11/rollout-2026-02-11T19-16-15-019c4f34-a206-7c92-b42b-dd1ce9b6e9c5.jsonl",
+    "/Users/eugenetsenter/.codex/sessions/2026/02/11/rollout-2026-02-11T15-36-28-019c4e6b-6afc-7680-ad33-e025000f97b4.jsonl",
+    "/Users/eugenetsenter/.codex/sessions/2026/02/11/rollout-2026-02-11T15-44-32-019c4e72-cde8-7730-a7fb-88e4fe2fd81d.jsonl",
+    "/Users/eugenetsenter/.codex/sessions/2026/02/11/rollout-2026-02-11T15-11-30-019c4e54-8fb9-74a1-8933-0020b1a791a5.jsonl"
+  ],
+  "remote_checks": [
+    "git -C /Users/eugenetsenter/Looker_clonedRepo/looker_personal/mft ls-remote --symref origin HEAD",
+    "git -C /Users/eugenetsenter/Looker_clonedRepo/looker_personal/util ls-remote --symref Omni_remote HEAD",
+    "git -C /Users/eugenetsenter/Looker_clonedRepo/looker_personal/util ls-remote --symref origin HEAD"
+  ],
+  "repos": [
+    {
+      "name": "mft",
+      "path": "/Users/eugenetsenter/Looker_clonedRepo/looker_personal/mft",
+      "is_git": true,
+      "branch": "No commits yet on main",
+      "staged": 1,
+      "modified": 0,
+      "untracked": 7,
+      "remotes": [
+        {
+          "name": "origin",
+          "url": "https://github.com/genetsen/mft.git",
+          "default_branch": "unknown",
+          "remote_head": "unknown",
+          "compare_to_local": "local repository has no commits"
+        }
+      ]
+    },
+    {
+      "name": "util",
+      "path": "/Users/eugenetsenter/Looker_clonedRepo/looker_personal/util",
+      "is_git": true,
+      "branch": "ADIF...origin/ADIF",
+      "staged": 0,
+      "modified": 21,
+      "untracked": 11,
+      "remotes": [
+        {
+          "name": "Omni_remote",
+          "url": "https://github.com/GiantSpoon-Tech/omni.git",
+          "default_branch": "main",
+          "remote_head": "f982c32e4185608f42216c5d18df13f4ed0c7bc6",
+          "compare_to_local": "local HEAD differs from remote HEAD"
+        },
+        {
+          "name": "origin",
+          "url": "https://github.com/genetsen/looker_personal",
+          "default_branch": "main",
+          "remote_head": "99787e9d59eb664dd763bdf2b780159a2f9129ef",
+          "compare_to_local": "local HEAD differs from remote HEAD"
+        }
+      ]
+    }
+  ]
+}

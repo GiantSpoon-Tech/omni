@@ -4,24 +4,32 @@ WITH
 agh as( -- AD GROUP HISTORY CTE
   select 
     adgroup_id,
-    
+    budget as ag_budget,
+    budget_mode as ag_budget_mode,
+    pacing as ag_pacing,
+    operation_status as ag_status,
+    schedule_start_time as ag_start_date, 
+    schedule_end_time as ag_end_date,
     optimization_goal as agh_optimization_goal,
     optimization_event as agh_optimization_event
-  from looker-studio-pro-452620.repo_tiktok.stg2__adgroup_history_deduped_filtered
+  from `looker-studio-pro-452620.repo_tiktok.stg2__adgroup_history_deduped_filtered`
 ),
 
 ah as ( -- AD HISTORY CTE
   select 
     ad_id as ah_id, 
-    optimization_event as ah_optimization_event
-  from looker-studio-pro-452620.repo_tiktok.stg2__ad_history_deduped_filtered
+    optimization_event as ah_optimization_event,
+    
+  from `looker-studio-pro-452620.repo_tiktok.stg2__ad_history_deduped_filtered`
 ),
 
 ch as ( -- CAMPAIGN HISTORY CTE
   select 
     campaign_id as ch_id, 
-    objective_type as c_objective_type
-  from looker-studio-pro-452620.repo_tiktok.stg2__campaign_history_deduped_filtered
+    objective_type as c_objective_type,
+    budget as c_budget,
+    budget_mode as c_budget_mode
+  from `looker-studio-pro-452620.repo_tiktok.stg2__campaign_history_deduped_filtered`
 ),
 
 ard as ( -- ADS DELIVERY DAILY CTE
@@ -72,7 +80,7 @@ SELECT
     ,adgroup_id
     ,ah_id
     ,ah_optimization_event
-    ,ch_id
+    ,ch_id 
     ,ard_id
     ,date
   )
